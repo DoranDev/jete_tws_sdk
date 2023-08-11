@@ -1,0 +1,49 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "957358835a3d7330cca6470b33503d14",
+    "entities": [
+      {
+        "tableName": "block_record",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address` TEXT NOT NULL, `block_time` INTEGER NOT NULL, PRIMARY KEY(`address`))",
+        "fields": [
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "blockTime",
+            "columnName": "block_time",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "address"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_block_record_address",
+            "unique": false,
+            "columnNames": [
+              "address"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_block_record_address` ON `${TABLE_NAME}` (`address`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '957358835a3d7330cca6470b33503d14')"
+    ]
+  }
+}

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:background="@color/globalLayoutBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            android:stateListAnimator="@drawable/appbar_elevation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                app:scrimVisibleHeightTrigger="100dp"
+                style="@style/AppTheme.CollapsingToolbar">
+
+                <!--这里放正在使用的设备，ActiveDevice-->
+                <include android:id="@+id/collapsing_toolbar_active_device"
+                    layout="@layout/collapsing_toolbar_active_device"/>
+
+                <!--这里放标题和菜单-->
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/disconnect_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.AppCompat.Button"
+                        android:text="@string/disconnect"
+                        android:visibility="gone"
+                        android:layout_gravity="end" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_scan_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_gravity="end"
+                        android:padding="8dp"
+                        android:orientation="horizontal">
+
+                        <ProgressBar
+                            android:id="@+id/progress_bar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:visibility="gone"
+                            style="@style/Widget.AppCompat.ProgressBar"/>
+
+                    </LinearLayout>
+
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_home"
+                android:name="com.bluetrum.abmate.HomeFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_function"
+                android:name="com.bluetrum.abmate.FunctionFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_settings"
+                android:name="com.bluetrum.abmate.SettingsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:elevation="8dp"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/menu_bottom_navigation" />
+</androidx.constraintlayout.widget.ConstraintLayout>

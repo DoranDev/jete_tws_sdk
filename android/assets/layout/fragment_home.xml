@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/globalLayoutBackground"
+    tools:context=".HomeFragment">
+
+    <!--todo: 这里的view需要制定高度-->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/player_container"
+        android:layout_width="0dp"
+        android:layout_height="180dp"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@android:color/holo_green_light">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/player_view"
+                android:layout_width="match_parent"
+                android:layout_height="172dp"
+                android:layout_margin="4dp"
+                android:background="@android:color/holo_red_light"/>
+
+        </FrameLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/device_function_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/player_container"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:overScrollMode="never"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_margin="4dp"
+        android:padding="4dp"
+        android:clipToPadding="false"
+        android:scrollbars="none"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

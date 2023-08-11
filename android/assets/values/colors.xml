@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3260B0</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+
+    <!--容器-->
+    <color name="globalLayoutBackground">#F8F8F8</color>
+    <color name="containerBackground">@android:color/white</color>
+
+    <!--均衡器-->
+    <!--@layout/function_equalizer.xml-->
+    <color name="equalizer_background">@android:color/transparent</color>
+    <color name="equalizer_grid_line">@android:color/holo_green_light</color>
+    <color name="equalizer_connector">@android:color/holo_green_light</color>
+    <color name="equalizer_name_background">@android:color/transparent</color>
+    <color name="equalizer_name_text">@android:color/primary_text_light</color>
+    <color name="equalizer_connector_shadow">@android:color/holo_green_light</color>
+    <!--@drawable/equalizer_thumb-->
+    <color name="equalizer_thumb">@android:color/holo_green_light</color>
+    <!--@drawable/equalizer_progress_style-->  <!--@drawable/equalizer_progress-->
+    <color name="equalizer_progress">@android:color/transparent</color>
+
+    <!--均衡器界面-->
+    <color name="eq_setting_default">@android:color/transparent</color>
+    <color name="eq_setting_current">@android:color/holo_green_light</color>
+    <color name="eq_setting_selected">@android:color/holo_red_light</color>
+    <color name="eq_delete_button_background">@android:color/transparent</color>
+    <color name="eq_delete_button_tint">@android:color/holo_red_light</color>
+
+    <!--设置-->
+    <color name="light_primary_color">#ffffffff</color>
+    <color name="app_settings_switch_background_color">#ffeeeeee</color>
+    <color name="app_settings_enabled_background_color">#ffddffdd</color>
+    <color name="app_settings_disabled_background_color">#ffffdddd</color>
+</resources>

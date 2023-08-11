@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/block_forever"
+        android:title="@string/block_time_forever"
+        app:showAsAction="ifRoom" />
+    <item android:id="@+id/block_one_day"
+        android:title="@string/block_time_one_day"
+        app:showAsAction="ifRoom" />
+    <item android:id="@+id/block_one_hour"
+        android:title="@string/block_time_one_hour"
+        app:showAsAction="ifRoom" />
+</menu>

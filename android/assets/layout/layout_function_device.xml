@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@drawable/rounder_function_view_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp">
+
+    <!--设备功能-->
+    <TextView
+        style="@style/DeviceFunctionTextHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginStart="@dimen/function_navigation_margin"
+        android:layout_marginEnd="@dimen/function_navigation_margin"
+        android:layout_marginTop="@dimen/function_title_top_margin"
+        android:layout_marginBottom="@dimen/function_title_bottom_margin"
+        android:text="@string/function_class_device_functions" />
+
+    <!--升级固件-->
+    <RelativeLayout
+        android:id="@+id/update_firmware_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_settings_divider_margin"
+        android:layout_marginEnd="@dimen/app_settings_divider_margin"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/rounder_action_view_bg"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/AppSettingsTextBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:paddingStart="@dimen/app_settings_navigation_view_padding"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:text="@string/function_update_firmware" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:clickable="false"
+            android:paddingStart="0dp"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:src="@drawable/ic_arrow_right_24dp"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <!--恢复默认设置-->
+    <RelativeLayout
+        android:id="@+id/restore_settings_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_settings_divider_margin"
+        android:layout_marginEnd="@dimen/app_settings_divider_margin"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/rounder_action_view_bg"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/AppSettingsTextBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:paddingStart="@dimen/app_settings_navigation_view_padding"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:text="@string/function_factory_reset" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:clickable="false"
+            android:paddingStart="0dp"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:src="@drawable/ic_arrow_right_24dp"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <!--清除配对记录-->
+    <RelativeLayout
+        android:id="@+id/clear_record_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_settings_divider_margin"
+        android:layout_marginEnd="@dimen/app_settings_divider_margin"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/rounder_action_view_bg"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/AppSettingsTextBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:paddingStart="@dimen/app_settings_navigation_view_padding"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:text="@string/function_clear_pair_record" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:clickable="false"
+            android:paddingStart="0dp"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:src="@drawable/ic_arrow_right_24dp"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+</LinearLayout>

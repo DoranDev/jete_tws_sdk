@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/rounder_function_view_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp">
+
+    <TextView
+        style="@style/DeviceFunctionTextHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/function_navigation_margin"
+        android:layout_marginEnd="@dimen/function_navigation_margin"
+        android:layout_marginTop="@dimen/function_title_top_margin"
+        android:layout_marginBottom="@dimen/function_title_bottom_margin"
+        android:text="@string/function_class_anc_level"/>
+
+    <com.zhouyou.view.segmentedbar.RectThumbSegmentedBarView
+        android:id="@+id/anc_level_segmented_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:sbv_bar_height="15dp"
+        app:sbv_description_box_height="35dp"
+        app:sbv_description_highlight_text_color="#461d18"
+        app:sbv_description_text_color="#c5bfbf"
+        app:sbv_description_text_size="14sp"
+        app:sbv_segment_bg="false"
+        app:sbv_segment_gap_width="0dp"
+        app:sbv_segment_rule="average"
+        app:sbv_show_description_text="true"
+        app:sbv_show_segment_text="false"
+        app:sbv_side_style="normal"
+        app:sbv_sliderType="Custom"
+        app:sbv_thumb_h="30dp"
+        app:sbv_thumb_w="34dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/anc_settings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/function_anc_settings"
+        android:layout_gravity="center" />
+
+</LinearLayout>

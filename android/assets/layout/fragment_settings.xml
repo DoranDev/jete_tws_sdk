@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/globalLayoutBackground"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingBottom="16dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="24dp">
+
+            <!--Logo, use CardView for rounded corner-->
+            <androidx.cardview.widget.CardView
+                android:layout_width="@dimen/app_settings_image_width"
+                android:layout_height="@dimen/app_settings_image_height"
+                style="@style/AppSettingsLogo">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@mipmap/ic_launcher_round"
+                    tools:ignore="ContentDescription" />
+
+            </androidx.cardview.widget.CardView>
+
+            <!--App信息-->
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/app_settings_navigation_divider_height"
+                android:layout_marginStart="@dimen/app_settings_divider_margin"
+                android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                android:layout_marginBottom="15dp"
+                android:background="?android:listDivider" />
+
+            <TextView
+                android:id="@+id/textViewAppName"
+                style="@style/AppSettingsTextHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/app_settings_navigation_margin"
+                android:layout_marginEnd="@dimen/app_settings_navigation_margin"
+                android:layout_marginBottom="5dp"
+                android:gravity="start"
+                android:text="@string/app_name" />
+
+            <TextView
+                android:id="@+id/textViewAppVersion"
+                style="@style/AppSettingsTextBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/app_settings_navigation_margin"
+                android:layout_marginEnd="@dimen/app_settings_navigation_margin"
+                android:layout_marginBottom="5dp"
+                android:text="@string/app_settings_version" />
+
+            <TextView
+                android:id="@+id/textViewBluetrumCooperation"
+                style="@style/AppSettingsTextLightBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/app_settings_navigation_margin"
+                android:layout_marginEnd="@dimen/app_settings_navigation_margin"
+                android:layout_marginBottom="20dp"
+                android:text="@string/app_settings_bluetrum_inc" />
+
+            <!--位置权限-->
+            <LinearLayout
+                android:id="@+id/locationAccessContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/divider6"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/app_settings_navigation_divider_height"
+                    android:layout_marginStart="@dimen/app_settings_divider_margin"
+                    android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                    android:layout_marginBottom="@dimen/app_settings_divider_bottom_margin"
+                    android:background="?android:listDivider" />
+
+                <TextView
+                    android:id="@+id/textViewLocationAccess"
+                    style="@style/AppSettingsTextHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/app_settings_navigation_margin"
+                    android:layout_marginEnd="@dimen/app_settings_navigation_margin"
+                    android:layout_marginBottom="@dimen/app_settings_title_bottom_margin"
+                    android:gravity="start"
+                    android:text="@string/app_settings_location_access" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    style="@style/AppSettingsTextBody"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/app_settings_navigation_margin"
+                    android:layout_marginEnd="@dimen/app_settings_navigation_margin"
+                    android:layout_marginBottom="@dimen/app_settings_sub_title_bottom_margin"
+                    android:gravity="start"
+                    android:text="@string/app_settings_location_access_description" />
+
+                <RelativeLayout
+                    android:id="@+id/location_settings_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/app_settings_divider_margin"
+                    android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                    android:background="@drawable/rounder_action_view_bg"
+                    android:clickable="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textAndroidSettingsBluetoothPermission"
+                        style="@style/AppSettingsTextBody"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:paddingStart="@dimen/app_settings_navigation_view_padding"
+                        android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                        android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+                        android:text="@string/app_settings_location_access_android_settings" />
+
+                    <ImageButton
+                        android:id="@+id/buttonSettingsBluetoothPermission"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:background="@null"
+                        android:clickable="false"
+                        android:paddingStart="0dp"
+                        android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                        android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+                        android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+                        android:src="@drawable/ic_arrow_right_24dp"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--蓝牙权限-->
+            <LinearLayout
+                android:id="@+id/bluetoothPermissionContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/dividerBluetoothPermission"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/app_settings_navigation_divider_height"
+                    android:layout_marginStart="@dimen/app_settings_divider_margin"
+                    android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                    android:layout_marginBottom="@dimen/app_settings_divider_bottom_margin"
+                    android:background="?android:listDivider" />
+
+                <TextView
+                    android:id="@+id/textViewBluetoothPermission"
+                    style="@style/AppSettingsTextHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/app_settings_navigation_margin"
+                    android:layout_marginEnd="@dimen/app_settings_navigation_margin"
+                    android:layout_marginBottom="@dimen/app_settings_title_bottom_margin"
+                    android:gravity="start"
+                    android:text="@string/app_settings_bluetooth_permission" />
+
+                <TextView
+                    android:id="@+id/textViewBluetoothPermissionDescription"
+                    style="@style/AppSettingsTextBody"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/app_settings_navigation_margin"
+                    android:layout_marginEnd="@dimen/app_settings_navigation_margin"
+                    android:layout_marginBottom="@dimen/app_settings_sub_title_bottom_margin"
+                    android:gravity="start"
+                    android:text="@string/app_settings_bluetooth_permission_description" />
+
+                <RelativeLayout
+                    android:id="@+id/bluetooth_settings_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/app_settings_divider_margin"
+                    android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                    android:background="@drawable/rounder_action_view_bg"
+                    android:clickable="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textAndroidSettings"
+                        style="@style/AppSettingsTextBody"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:paddingStart="@dimen/app_settings_navigation_view_padding"
+                        android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                        android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+                        android:text="@string/app_settings_bluetooth_permission_android_settings" />
+
+                    <ImageButton
+                        android:id="@+id/btn_settings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:background="@null"
+                        android:clickable="false"
+                        android:paddingStart="0dp"
+                        android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                        android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+                        android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+                        android:src="@drawable/ic_arrow_right_24dp"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--快速连接-->
+            <LinearLayout
+                android:id="@+id/quickConnectContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/dividerQuickConnect"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/app_settings_navigation_divider_height"
+                    android:layout_marginStart="@dimen/app_settings_divider_margin"
+                    android:layout_marginTop="@dimen/app_settings_divider_top_margin"
+                    android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                    android:layout_marginBottom="@dimen/app_settings_divider_bottom_margin"
+                    android:background="?android:listDivider" />
+
+                <TextView
+                    android:id="@+id/textViewQuickConnect"
+                    style="@style/AppSettingsTextHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/app_settings_navigation_margin"
+                    android:layout_marginEnd="@dimen/app_settings_navigation_margin"
+                    android:layout_marginBottom="@dimen/app_settings_title_bottom_margin"
+                    android:gravity="start"
+                    android:text="@string/app_settings_quick_connect_title" />
+
+                <TextView
+                    android:id="@+id/textViewQuickConnectDescription"
+                    style="@style/AppSettingsTextBody"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/app_settings_navigation_margin"
+                    android:layout_marginEnd="@dimen/app_settings_navigation_margin"
+                    android:layout_marginBottom="@dimen/app_settings_sub_title_bottom_margin"
+                    android:gravity="start"
+                    android:text="@string/app_settings_quick_connect_description" />
+
+                <RelativeLayout
+                    android:id="@+id/quickConnectLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/app_settings_divider_margin"
+                    android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                    android:background="@drawable/rounder_action_view_bg"
+                    android:clickable="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/quickConnectText"
+                        style="@style/AppSettingsTextHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:paddingStart="@dimen/app_settings_navigation_view_padding"
+                        android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                        android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+                        android:text="@string/app_settings_quick_connect_title" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/quickConnectSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:paddingStart="0dp"
+                        android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                        android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+                        android:paddingBottom="@dimen/app_settings_navigation_view_padding" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--显示启动横幅-->
+            <LinearLayout
+                android:id="@+id/launcherNotificationContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/dividerLauncherNotification"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/app_settings_navigation_divider_height"
+                    android:layout_marginStart="@dimen/app_settings_divider_margin"
+                    android:layout_marginTop="@dimen/app_settings_divider_top_margin"
+                    android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                    android:layout_marginBottom="@dimen/app_settings_divider_bottom_margin"
+                    android:background="?android:listDivider" />
+
+                <!--<TextView-->
+                <!--    android:id="@+id/textViewLauncherNotification"-->
+                <!--    style="@style/AppSettingsTextHeader"-->
+                <!--    android:layout_width="match_parent"-->
+                <!--    android:layout_height="wrap_content"-->
+                <!--    android:layout_marginStart="@dimen/app_settings_navigation_margin"-->
+                <!--    android:layout_marginEnd="@dimen/app_settings_navigation_margin"-->
+                <!--    android:layout_marginBottom="@dimen/app_settings_title_bottom_margin"-->
+                <!--    android:gravity="start"-->
+                <!--    android:text="@string/app_settings_launcher_notification_title" />-->
+
+                <TextView
+                    android:id="@+id/textViewLauncherNotificationDescription"
+                    style="@style/AppSettingsTextBody"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/app_settings_navigation_margin"
+                    android:layout_marginEnd="@dimen/app_settings_navigation_margin"
+                    android:layout_marginBottom="@dimen/app_settings_sub_title_bottom_margin"
+                    android:gravity="start"
+                    android:text="@string/app_settings_launcher_notification_description" />
+
+                <RelativeLayout
+                    android:id="@+id/launcherNotificationLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/app_settings_divider_margin"
+                    android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                    android:background="@drawable/rounder_action_view_bg"
+                    android:clickable="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/launcherText"
+                        style="@style/AppSettingsTextHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:paddingStart="@dimen/app_settings_navigation_view_padding"
+                        android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                        android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+                        android:text="@string/app_settings_launcher_notification_title" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/launcherSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:paddingStart="0dp"
+                        android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                        android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+                        android:paddingBottom="@dimen/app_settings_navigation_view_padding" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--以下是文稿-->
+            <View
+                android:id="@+id/divider10"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/app_settings_navigation_divider_height"
+                android:layout_marginStart="@dimen/app_settings_divider_margin"
+                android:layout_marginTop="@dimen/app_settings_divider_top_margin"
+                android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                android:layout_marginBottom="@dimen/app_settings_divider_bottom_margin"
+                android:background="?android:listDivider" />
+
+            <RelativeLayout
+                android:id="@+id/legalView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/app_settings_divider_margin"
+                android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rounder_action_view_bg"
+                android:clickable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewLegal"
+                    style="@style/AppSettingsTextBody"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:paddingStart="@dimen/app_settings_navigation_view_padding"
+                    android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                    android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+                    android:text="@string/app_settings_documents_legal" />
+
+                <ImageButton
+                    android:id="@+id/btn_legal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@null"
+                    android:clickable="false"
+                    android:contentDescription="@string/app_settings_documents_legal"
+                    android:paddingStart="@dimen/app_settings_navigation_view_padding"
+                    android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                    android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+                    android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+                    android:src="@drawable/ic_arrow_right_24dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/privacy_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/app_settings_divider_margin"
+                android:layout_marginEnd="@dimen/app_settings_divider_margin"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rounder_action_view_bg"
+                android:clickable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewPrivacy"
+                    style="@style/AppSettingsTextBody"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:paddingStart="@dimen/app_settings_navigation_view_padding"
+                    android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                    android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+                    android:text="@string/app_settings_documents_privacy_policy" />
+
+                <ImageButton
+                    android:id="@+id/btn_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@null"
+                    android:clickable="false"
+                    android:contentDescription="@string/app_settings_documents_privacy_policy"
+                    android:paddingStart="@dimen/app_settings_navigation_view_padding"
+                    android:paddingTop="@dimen/app_settings_navigation_view_padding"
+                    android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+                    android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+                    android:src="@drawable/ic_arrow_right_24dp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,228 @@
+<resources>
+    <string name="app_name">ABMate</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="title_home">Home</string>
+    <string name="title_function">Function</string>
+    <string name="title_settings">Settings</string>
+
+    <string name="request_succeeded">Request succeeded</string>
+    <string name="request_failed">Request failed</string>
+    <string name="request_timeout">Request timeout</string>
+
+    <!--Permissions-->
+    <string name="permission_rationale_read_external_storage">Playing music need read external storage permission.</string>
+    <string name="permission_rationale_location">Bluetooth scanning need location access permission.</string>
+    <string name="permission_rationale_bluetooth">Bluetooth scanning and connecting need bluetooth device permission.</string>
+
+    <!--Popup-->
+    <string name="connect">Connect</string>
+    <string name="block_time_forever">Never Popup</string>
+    <string name="block_time_one_day">Don\'t Popup in One Day</string>
+    <string name="block_time_one_hour">Don\'t Popup in One Hour</string>
+    <string name="pairing">Pairing…\nWaiting for bluetooth pairing popup</string>
+    <string name="paired">Paired</string>
+    <string name="connecting">Connecting…</string>
+    <string name="connected">Connected</string>
+    <string name="authenticating">Authenticating…</string>
+    <string name="authenticated">Authenticated</string>
+    <string name="done">Done</string>
+
+    <!--Settings-->
+    <string name="app_settings_version">V%1$s (%2$d)</string>
+    <string name="app_settings_bluetrum_inc">© Bluetrum Technology Co.,ltd. All Rights Reserved.</string>
+    <string name="app_settings_location_access">Location Access</string>
+    <string name="app_settings_location_access_android_settings">Android Settings</string>
+    <string name="app_settings_location_access_description">Allow the app to know your location in order to pair products via Bluetooth LE.</string>
+    <string name="app_settings_bluetooth_permission">Bluetooth Permission</string>
+    <string name="app_settings_bluetooth_permission_android_settings">Android Settings</string>
+    <string name="app_settings_bluetooth_permission_description">Allow the app to use Bluetooth to scan and connect to the devices nearby.</string>
+    <string name="app_settings_overlay_permission_button">Android Settings</string>
+    <string name="app_settings_overlay_permission_description">This permission allows an app to display on top of other apps you’re using, In order to use Quick-Connect.</string>
+    <string name="app_settings_overlay_permission_title">Display over other apps</string>
+    <string name="app_settings_quick_connect_description">Auto-connect device connected to phone as active headset. If no active headset, will launch auto-scanning. If found a device, will show a popup to quick-connect to. (Auto-scanning will consume more power. App will not scan when enter background.)</string>
+    <string name="app_settings_quick_connect_title">Quick Connect</string>
+    <string name="app_settings_quick_connect_bluetooth_permission">Lacks BLUETOOTH permission, go to grant BLUETOOTH permission?</string>
+    <string name="app_settings_quick_connect_location_permission">Lacks LOCATION permission, go to grant LOCATION permission?</string>
+    <string name="app_settings_quick_connect_will_be_disabled">Quick Connect will be disabled, due to the necessary permission has been denied.</string>
+    <string name="app_settings_launcher_notification_button">Android Settings</string>
+    <string name="app_settings_launcher_notification_description">Show a notification when the app enter background, click to launch app to set up earbuds.</string>
+    <string name="app_settings_launcher_notification_title">Quick Launcher Notification Banner</string>
+    <string name="app_settings_documents_legal">Legal</string>
+    <string name="app_settings_documents_privacy_policy">Privacy Policy</string>
+
+    <!--Home-->
+    <string name="add_device">Add Device</string>
+    <string name="disconnect">Disconnect</string>
+
+    <string name="no_managed_device_title">No Device</string>
+    <string name="no_managed_device_rationale">Click the button below to add device</string>
+
+    <string name="no_active_device_title">No connected Device</string>
+    <string name="no_active_device_rationale">Please connect device first</string>
+
+    <string name="unknown_name">Unknown Name</string>
+    <string name="scan">Scan</string>
+
+    <string name="home_function_connect_device">Please connect device first</string>
+
+    <string name="home_function_local_music">Local Music</string>
+
+    <!--Function-->
+    <string name="function_class_anc_level">ANC</string>
+    <string name="function_anc_level_transparency">Transparency</string>
+    <string name="function_anc_level_off">Off</string>
+    <string name="function_anc_level_on">On</string>
+    <string name="function_anc_settings">ANC Settings</string>
+    <string name="function_anc_settings_anc_level">ANC Level</string>
+    <string name="function_anc_settings_transparency_level">Transparency Level</string>
+
+    <string name="function_class_key_functions">Key Functions</string>
+    <string name="function_key_select">Select Key Function</string>
+    <string name="function_key_audio_mode">Audio Mode</string>
+    <string name="function_key_call_mode">Call Mode</string>
+    <string name="function_key_left">L</string>
+    <string name="function_key_right">R</string>
+    <string name="function_key_single_tap">Single Tap</string>
+    <string name="function_key_double_tap">Double Tap</string>
+    <string name="function_key_triple_tap">Triple Tap</string>
+    <string name="function_key_long_press">Long Press</string>
+
+    <string name="function_key_function_none">None</string>
+    <string name="function_key_function_recall">Recall</string>
+    <string name="function_key_function_voice_assistant">Voice Assistant</string>
+    <string name="function_key_function_previous">Previous</string>
+    <string name="function_key_function_next">Next</string>
+    <string name="function_key_function_volume_up">Volume Up</string>
+    <string name="function_key_function_volume_down">Volume Down</string>
+    <string name="function_key_function_play_pause">Play/Pause</string>
+    <string name="function_key_function_game_mode">Game Mode</string>
+    <string name="function_key_function_anc_mode">ANC Control</string>
+
+    <string name="function_class_equalizer">Equalizer</string>
+    <string name="function_equalizer_preset_select">Select Equalizer Preset</string>
+    <string name="function_equalizer_custom_add">+</string>
+    <string name="function_equalizer_custom">Custom</string>
+    <string name="function_equalizer_preset_default">Default</string>
+    <string name="function_equalizer_preset_pop">Pop</string>
+    <string name="function_equalizer_preset_rock">Rock</string>
+    <string name="function_equalizer_preset_jazz">Jazz</string>
+    <string name="function_equalizer_preset_classic">Classic</string>
+    <string name="function_equalizer_preset_country">Country</string>
+    <string name="function_equalizer_preset_folk">Folk</string>
+
+    <string name="function_class_earbuds_functions">EarBuds Functions</string>
+
+    <string name="function_rename_device">Rename Device</string>
+    <string name="function_rename_complete_tip">The renaming requires manual un-pair and re-pair Bluetooth before it can take effect. Now go to Bluetooth Settings?</string>
+
+    <string name="function_work_mode">Work Mode</string>
+    <string name="function_work_mode_select">Select Work Mode</string>
+    <string name="function_work_mode_normal">Normal Mode</string>
+    <string name="function_work_mode_game">Game Mode</string>
+
+    <string name="function_microphone_settings">Microphone Settings</string>
+    <string name="function_microphone_settings_select">Microphone Settings</string>
+    <string name="function_microphone_settings_auto">Auto</string>
+    <string name="function_microphone_settings_left">Left</string>
+    <string name="function_microphone_settings_right">Right</string>
+
+    <string name="function_find_device_settings">Find Device</string>
+    <string name="function_find_device_description">Play sound on device</string>
+
+    <string name="function_led_switch">LED Switch</string>
+    <string name="function_led_settings">LED Settings</string>
+    <string name="function_led_settings_select">Select LED Settings</string>
+    <string name="function_led_settings_all_off">All Off</string>
+    <string name="function_led_settings_blue_always_on">Blue Always On</string>
+    <string name="function_led_settings_red_always_on">Red Always On</string>
+    <string name="function_led_settings_blue_slow_blink">Blue Slow Blinking</string>
+    <string name="function_led_settings_blue_fast_blink">Blue Fast Blinking</string>
+    <string name="function_led_settings_red_slow_blink">Red Slow Blinking</string>
+    <string name="function_led_settings_red_fast_blink">Red Fast Blinking</string>
+    <string name="function_led_settings_red_blue_slow_blink">Red &amp; Blue Slow Blinking Alternately</string>
+    <string name="function_led_settings_red_blue_fast_blink">Red &amp; Blue Fast Blinking Alternately</string>
+
+    <string name="function_sound_effect_3d">3D Sound Effect</string>
+
+    <string name="function_class_device_functions">Device Functions</string>
+    <string name="function_update_firmware">Update Firmware</string>
+    <string name="function_factory_reset">Factory Reset</string>
+    <string name="function_clear_pair_record">Clear Pair Record</string>
+
+    <string name="function_factory_reset_comfirm">Device will do a factory reset, this operation will restore all the settings to default?</string>
+    <string name="function_clear_pair_record_confirm">Device will clear pair record. Device will disconnect when finished?</string>
+
+    <!--EQ-->
+    <string name="eq_menu_edit">Edit</string>
+    <string name="eq_menu_cancel">Cancel</string>
+    <string name="eq_alert_will_be_deleted"><b>%s</b> will be deleted, do it? </string>
+
+    <string name="eq_name_title">EQ name</string>
+    <string name="eq_name_length_exceeded">The EQ name has exceeded the maximum length</string>
+
+    <!--OTA-->
+    <string name="ota_device_not_connected">Device is not connected</string>
+
+    <string name="ota_menu_select_file">Select File</string>
+
+    <string name="ota_start_update">Start Update</string>
+    <string name="ota_toast_updating">Updating… Please don\'t leave here</string>
+    <string name="ota_select_file">Select FOT file to update</string>
+
+    <string name="ota_current_firmware_version">Current FW Ver: %1$d.%2$d.%3$d.%4$d</string>
+    <string name="ota_read_file_error">OTA file read error</string>
+    <string name="ota_device_connected">Device is connected</string>
+    <string name="ota_device_disconnected">Device is disconnected</string>
+    <string name="ota_tws_connected">Connected</string>
+    <string name="ota_tws_disconnected">Disconnected</string>
+    <string name="ota_alert_quit">Device or TWS is disconnected, update will be quit now.</string>
+
+    <string name="ota_device_refused_the_update">Device refused the update</string>
+    <string name="ota_ready_to_update">Ready to update</string>
+    <string name="ota_updating">Updating…</string>
+    <string name="ota_update_finished">Update finished</string>
+    <string name="ota_update_pause">Update paused</string>
+
+    <string name="ota_error_same_firmware">Try to update the same firmware</string>
+    <string name="ota_error_key_mismatch">Key mismatch</string>
+    <string name="ota_error_crc_error">CRC error</string>
+    <string name="ota_error_wrong_seq_num">Wrong sequence number</string>
+    <string name="ota_error_wrong_data_len">Wrong data length</string>
+    <string name="ota_error_tws_disconnected">TWS disconnected</string>
+    <string name="ota_error_unknown">Unknown error code: </string>
+    <string name="ota_error_alert">Update error: %s</string>
+
+    <!--Scanner-->
+    <string name="location_permission_title">LOCATION PERMISSION REQUIRED</string>
+    <string name="location_permission_info">From Android 6.0 Marshmallow onwards the application requires Location permission in order to scan for Bluetooth Low Energy devices.</string>
+    <string name="action_grant_permission">Grant permission</string>
+    <string name="action_permission_settings">Settings</string>
+
+    <string name="bluetooth_disabled_title">BLUETOOTH DISABLED</string>
+    <string name="bluetooth_disabled_info">The Bluetooth adapter is turned off. Click the button below to enable it.</string>
+    <string name="bluetooth_disabled_action">Enable</string>
+
+    <string name="ble_permissions_title">BLUETOOTH PERMISSIONS REQUIRED</string>
+    <string name="ble_permissions_info">From Android 12 onwards the application requires Bluetooth Scan and Connect permissions to scan and connect to Bluetooth devices.</string>
+
+    <string name="device_guide_title">CAN\'T SEE YOUR DEVICE?</string>
+    <string name="device_guide_info">1. Make sure the Device is in <b>Pairing State</b>.
+        \n\n2. Make sure this app is <b>compatible</b> with your device.</string>
+    <string name="device_guide_location_info">3. Location is turned off. Some Android phones require it enabled in order to scan for Bluetooth LE devices.
+		If you are sure your device doesn\'t show up here, click the button below to enable Location.</string>
+    <string name="device_guide_location_action">Enable</string>
+
+    <string name="notification_earbuds_default_title">@string/app_name</string>
+    <!--<string name="notification_earbuds_default_title">Bluetooth EarBuds</string>-->
+    <string name="notification_earbuds_default_content">Quick Pair Bluetrum EarBuds</string>
+    <string name="notification_earbuds_bluetrum_content">Bluetrum EarBuds Connected</string>
+
+    <string name="title_device_name">Device name</string>
+    <string name="error_empty_name">Name cannot be empty!</string>
+    <string name="device_name_rationale">Type a friendly name you like.</string>
+    <string name="hint_friendly_name">Friendly name</string>
+    <string name="device_name_length_exceeded">The device name has exceeded the maximum length</string>
+</resources>

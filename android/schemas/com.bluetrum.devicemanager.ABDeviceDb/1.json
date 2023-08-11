@@ -1,0 +1,55 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "aceb51004628f9518e316da307c8bc22",
+    "entities": [
+      {
+        "tableName": "base_device",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address` TEXT NOT NULL, `name` TEXT NOT NULL, `random` BLOB NOT NULL, PRIMARY KEY(`address`))",
+        "fields": [
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "random",
+            "columnName": "random",
+            "affinity": "BLOB",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "address"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_base_device_address",
+            "unique": false,
+            "columnNames": [
+              "address"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_base_device_address` ON `${TABLE_NAME}` (`address`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'aceb51004628f9518e316da307c8bc22')"
+    ]
+  }
+}

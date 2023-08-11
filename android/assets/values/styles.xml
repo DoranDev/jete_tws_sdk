@@ -1,0 +1,153 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@color/globalLayoutBackground</item>
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--沉浸式状态栏-->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <!--BottomSheet-->
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
+    </style>
+
+    <!--非主界面使用-->
+    <style name="AppTheme.AppCompat" parent="Theme.MaterialComponents.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--沉浸式状态栏-->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+    </style>
+
+    <!--启动界面-->
+    <style name="AppTheme.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/globalLayoutBackground</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="windowSplashScreenAnimationDuration">900</item>
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
+    </style>
+
+    <style name="PopupDialogTheme" parent="Theme.AppCompat.Dialog">
+
+    </style>
+
+    <!--CollapsingToolbarLayout-->
+    <style name="AppTheme.CollapsingToolbar">
+        <item name="titleEnabled">true</item>
+        <item name="expandedTitleGravity">top|center_horizontal</item>
+        <item name="collapsedTitleGravity">left</item>
+        <item name="contentScrim">@color/colorPrimary</item>
+        <item name="expandedTitleMargin">16dp</item>
+        <item name="scrimAnimationDuration">500</item>
+        <item name="statusBarScrim">@color/colorAccent</item>
+        <item name="layout_scrollFlags">exitUntilCollapsed|scroll|snap</item>
+        <item name="expandedTitleTextAppearance">@style/AppTheme.CollapsingToolbar.ExpandedTextAppearance</item>
+        <item name="collapsedTitleTextAppearance">@style/AppTheme.CollapsingToolbar.CollapsedTextAppearance</item>
+    </style>
+    <style name="AppTheme.CollapsingToolbar.ExpandedTextAppearance">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+    <style name="AppTheme.CollapsingToolbar.CollapsedTextAppearance">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="AppTheme.CollapsingToolbar.ActiveDevice">
+        <item name="android:layout_marginTop">?actionBarSize</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="AppTheme.CollapsingToolbar.ActiveDevice.DeviceImage">
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="AppTheme.CollapsingToolbar.ActiveDevice.BatteryLevelText">
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!--AppBarLayout-->
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
+    <!--Toolbar-->
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light"/>
+
+    <!--BottomSheet-->
+    <style name="BottomSheetDialogTheme" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetModalStyle</item>
+    </style>
+    <style name="BottomSheetModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/top_rounded_dialog_12dp</item>
+    </style>
+
+    <!--快速配对弹窗-->
+    <style name="BottomSheetQuickPairStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/all_rounded_dialog</item>
+    </style>
+
+    <style name="Widget"/>
+
+    <!--提示信息文本样式-->
+    <style name="Widget.InfoWarningTitles">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Widget.InfoWarningBody">
+        <item name="android:textColor">@android:color/secondary_text_light</item>
+    </style>
+
+    <style name="DeviceFunctionTextHeader">
+        <item name="android:textSize">17sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">start|center</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="DeviceFunctionKeyStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">start|center</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginEnd">4dp</item>
+        <item name="android:textAlignment">textEnd</item>
+    </style>
+
+    <style name="AppSettingsLogo">
+        <item name="cardCornerRadius">3dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginBottom">44dp</item>
+    </style>
+
+    <!--设置里的字体-->
+    <style name="AppSettingsTextBody">
+        <item name="android:textSize">15sp</item>
+<!--        <item name="android:textColor">@color/light_primary_color</item>-->
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="AppSettingsTextHeader">
+        <item name="android:textSize">17sp</item>
+<!--        <item name="android:textColor">@color/light_primary_color</item>-->
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">start|center</item>
+    </style>
+    <style name="AppSettingsTextLightBody">
+        <item name="android:textSize">13sp</item>
+<!--        <item name="android:textColor">@color/light_primary_color</item>-->
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+</resources>

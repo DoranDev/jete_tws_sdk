@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@drawable/rounder_function_view_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp">
+
+    <TextView
+        style="@style/DeviceFunctionTextHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/function_navigation_margin"
+        android:layout_marginEnd="@dimen/function_navigation_margin"
+        android:layout_marginTop="@dimen/function_title_top_margin"
+        android:layout_marginBottom="@dimen/function_title_bottom_margin"
+        android:text="@string/function_class_earbuds_functions" />
+
+    <!--修改名称-->
+    <RelativeLayout
+        android:id="@+id/rename_device_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_settings_divider_margin"
+        android:layout_marginEnd="@dimen/app_settings_divider_margin"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/rounder_action_view_bg"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/rename_device_title"
+            style="@style/AppSettingsTextBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:paddingStart="@dimen/app_settings_navigation_view_padding"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:text="@string/function_rename_device" />
+
+        <TextView
+            android:id="@+id/rename_device_detail"
+            style="@style/DeviceFunctionKeyStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/indicator1"
+            android:layout_toEndOf="@id/rename_device_title" />
+
+        <ImageButton
+            android:id="@+id/indicator1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:clickable="false"
+            android:paddingStart="0dp"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:src="@drawable/ic_arrow_right_24dp"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <!--工作模式-->
+    <RelativeLayout
+        android:id="@+id/work_mode_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_settings_divider_margin"
+        android:layout_marginEnd="@dimen/app_settings_divider_margin"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/rounder_action_view_bg"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/work_mode_title"
+            style="@style/AppSettingsTextBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:paddingStart="@dimen/app_settings_navigation_view_padding"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:text="@string/function_work_mode" />
+
+        <TextView
+            android:id="@+id/work_mode_detail"
+            style="@style/DeviceFunctionKeyStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/work_mode_title"
+            android:layout_toStartOf="@+id/indicator2"/>
+
+        <ImageButton
+            android:id="@+id/indicator2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:clickable="false"
+            android:paddingStart="0dp"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:src="@drawable/ic_arrow_right_24dp"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <!--麦克风-->
+    <!--！！！大概并没有麦克风选择！！！-->
+    <RelativeLayout
+        android:id="@+id/microphone_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_settings_divider_margin"
+        android:layout_marginEnd="@dimen/app_settings_divider_margin"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/rounder_action_view_bg"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/microphone_title"
+            style="@style/AppSettingsTextBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:paddingStart="@dimen/app_settings_navigation_view_padding"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:text="@string/function_microphone_settings" />
+
+        <TextView
+            android:id="@+id/microphone_detail"
+            style="@style/DeviceFunctionKeyStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/microphone_title"
+            android:layout_toStartOf="@+id/indicator3"/>
+
+        <ImageButton
+            android:id="@+id/indicator3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:clickable="false"
+            android:paddingStart="0dp"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:src="@drawable/ic_arrow_right_24dp"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <!--闪灯设置-->
+    <RelativeLayout
+        android:id="@+id/led_settings_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_settings_divider_margin"
+        android:layout_marginEnd="@dimen/app_settings_divider_margin"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/rounder_action_view_bg"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/led_settings_title"
+            style="@style/AppSettingsTextBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:paddingStart="@dimen/app_settings_navigation_view_padding"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:text="@string/function_led_switch" />
+
+        <TextView
+            android:id="@+id/led_settings_detail"
+            style="@style/DeviceFunctionKeyStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/led_switch"
+            android:layout_toEndOf="@id/led_settings_title" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/led_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:paddingStart="0dp"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding" />
+    </RelativeLayout>
+
+    <!--3D音效-->
+    <RelativeLayout
+        android:id="@+id/sound_effect_3d_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_settings_divider_margin"
+        android:layout_marginEnd="@dimen/app_settings_divider_margin"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/rounder_action_view_bg"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/sound_effect_3d_title"
+            style="@style/AppSettingsTextBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:paddingStart="@dimen/app_settings_navigation_view_padding"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:text="@string/function_sound_effect_3d" />
+
+        <TextView
+            android:id="@+id/sound_effect_3d_detail"
+            style="@style/DeviceFunctionKeyStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/sound_effect_3d_switch"
+            android:layout_toEndOf="@id/sound_effect_3d_title" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sound_effect_3d_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:paddingStart="0dp"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding" />
+    </RelativeLayout>
+
+    <!--查找设备-->
+    <RelativeLayout
+        android:id="@+id/find_device_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_settings_divider_margin"
+        android:layout_marginEnd="@dimen/app_settings_divider_margin"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/rounder_action_view_bg"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/find_device_title"
+            style="@style/AppSettingsTextBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:paddingStart="@dimen/app_settings_navigation_view_padding"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding"
+            android:text="@string/function_find_device_settings" />
+
+        <TextView
+            android:id="@+id/find_device_detail"
+            style="@style/DeviceFunctionKeyStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/find_device_switch"
+            android:layout_toEndOf="@id/find_device_title"
+            android:textSize="12sp"
+            android:text="@string/function_find_device_description" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/find_device_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:paddingStart="0dp"
+            android:paddingTop="@dimen/app_settings_navigation_view_padding"
+            android:paddingEnd="@dimen/app_settings_navigation_view_padding"
+            android:paddingBottom="@dimen/app_settings_navigation_view_padding" />
+    </RelativeLayout>
+
+</LinearLayout>

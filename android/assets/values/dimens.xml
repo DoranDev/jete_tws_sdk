@@ -1,0 +1,37 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!--功能-->
+    <dimen name="function_navigation_margin">12dp</dimen>
+    <dimen name="function_title_top_margin">4dp</dimen>
+    <dimen name="function_title_bottom_margin">5dp</dimen>
+    <dimen name="function_key_table_row_margin_top">5dp</dimen>
+    <dimen name="function_key_table_row_margin_bottom">5dp</dimen>
+
+    <!--EQ设置界面-->
+    <dimen name="eq_setting_name_default">20sp</dimen>
+    <dimen name="eq_setting_name_add">32sp</dimen>
+
+    <!--设置-->
+    <dimen name="app_settings_divider_bottom_margin">18dp</dimen>
+    <dimen name="app_settings_divider_margin">10dp</dimen>
+    <dimen name="app_settings_divider_top_margin">24dp</dimen>
+    <dimen name="app_settings_image_height">82dp</dimen>
+    <dimen name="app_settings_image_width">82dp</dimen>
+    <dimen name="app_settings_navigation_divider_height">2dp</dimen>
+    <dimen name="app_settings_navigation_margin">20dp</dimen>
+    <dimen name="app_settings_navigation_view_padding">10dp</dimen>
+    <dimen name="app_settings_sub_title_bottom_margin">24dp</dimen>
+    <dimen name="app_settings_title_bottom_margin">4dp</dimen>
+
+    <!--AlertDialog Padding-->
+    <dimen name="alert_dialog_padding">16dp</dimen>
+    <dimen name="alert_dialog_padding_left">24dp</dimen>
+    <dimen name="alert_dialog_padding_right">24dp</dimen>
+    <dimen name="alert_dialog_padding_bottom">32dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+</resources>
