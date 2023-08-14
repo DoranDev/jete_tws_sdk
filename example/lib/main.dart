@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:jete_tws_sdk/jete_tws_sdk.dart';
 
 void main() {
