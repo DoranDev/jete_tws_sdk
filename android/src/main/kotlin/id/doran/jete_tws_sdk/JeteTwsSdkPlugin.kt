@@ -1,33 +1,32 @@
 package id.doran.jete_tws_sdk
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
+import com.bluetrum.abmate.BuildConfig
+import com.bluetrum.abmate.viewmodels.DefaultDeviceCommManager
 import com.bluetrum.abmate.viewmodels.DeviceRepository
-import com.bluetrum.abmate.viewmodels.ScannerViewModel
+import com.bluetrum.abmate.viewmodels.ScannerRepository
+import com.bluetrum.devicemanager.DeviceManagerApi
 import com.bluetrum.devicemanager.models.ABDevice
-import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.embedding.engine.plugins.activity.ActivityAware
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import timber.log.Timber
+import timber.log.Timber.DebugTree
 
 /** JeteTwsSdkPlugin */
-class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
+class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler{
   private lateinit var channel : MethodChannel
   private lateinit var mContext : Context
-  private lateinit var mActivity: Context
-
-
-  // Singleton instance of your ViewModel
-  private lateinit var scannerViewModel: ScannerViewModel
+  private lateinit var mDefaultDeviceCommManager: DefaultDeviceCommManager
+  private lateinit var mDeviceManagerApi: DeviceManagerApi
+  private lateinit var mScannerRepository: ScannerRepository
+  private lateinit var mDeviceRepository: DeviceRepository
 
 
   private fun initScanner() {
     // Observe scannerViewModel livedata
-    scannerViewModel.deviceConnectionState.observeForever { state ->
+    mDeviceRepository.deviceConnectionState.observeForever { state ->
       Timber.d("$state")
       when (state) {
         DeviceRepository.DEVICE_CONNECTION_STATE_IDLE -> {
@@ -40,55 +39,62 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
       }
     }
 
-    scannerViewModel.popupDevice.observeForever { device ->
+    mDeviceRepository.popupDevice.observeForever { device ->
       // handle popup device
       Timber.d("$device")
     }
 
-    scannerViewModel.activeDevice.observeForever { device ->
+    mDeviceRepository.activeDevice.observeForever { device ->
       // handle active device
       Timber.d("$device")
     }
 
-    scannerViewModel.devicePower.observeForever { power ->
+    mDeviceRepository.devicePower.observeForever { power ->
       // handle power
       Timber.d("$power")
     }
 
     // other observers
 
-    scannerViewModel.deviceRepository.scanningState.observeForever { scanning ->
+    mDeviceRepository.scanningState.observeForever { scanning ->
       // handle scanning state
       Timber.d("$scanning")
     }
 
-    scannerViewModel.scannerRepository.scannerResults.observeForever{ liveData ->
+    mScannerRepository.scannerResults.observeForever{ liveData ->
       Timber.d("${liveData.devices}")
     }
   }
 
   private fun startScan() {
-    scannerViewModel.deviceRepository?.startScan()
+    mDeviceRepository.startScan()
   }
 
   private fun stopScan() {
-    scannerViewModel.deviceRepository?.stopScan()
+    mDeviceRepository.stopScan()
   }
 
   private fun bondDevice() {
-    val device: ABDevice? = scannerViewModel.activeDevice.value
-    scannerViewModel.deviceRepository?.bondDevice(device)
+    val device: ABDevice? = mDeviceRepository.activeDevice.value
+    mDeviceRepository.bondDevice(device)
   }
 
 
   private fun disconnect() {
-    scannerViewModel.deviceRepository?.disconnect()
+    mDeviceRepository.disconnect()
   }
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    if (BuildConfig.DEBUG) {
+      Timber.plant(DebugTree())
+    }
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "jete_tws_sdk")
     channel.setMethodCallHandler(this)
     mContext = flutterPluginBinding.applicationContext
+    mDeviceManagerApi = DeviceManagerApi(mContext)
+    mDefaultDeviceCommManager = DefaultDeviceCommManager()
+    mScannerRepository = ScannerRepository(mContext,mDeviceManagerApi)
+    mDeviceRepository = DeviceRepository(mContext,mDeviceManagerApi,mDefaultDeviceCommManager)
     initScanner()
   }
 
@@ -104,22 +110,5 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
 
   override fun onDetachedFromEngine( binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
-  }
-
-  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-    mActivity = binding.activity
-    scannerViewModel = ViewModelProvider(mActivity as FlutterFragmentActivity).get(ScannerViewModel::class.java)
-  }
-
-  override fun onDetachedFromActivityForConfigChanges() {
-
-  }
-
-  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-
-  }
-
-  override fun onDetachedFromActivity() {
-
   }
 }

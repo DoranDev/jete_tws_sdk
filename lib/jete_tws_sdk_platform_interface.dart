@@ -23,7 +23,19 @@ abstract class JeteTwsSdkPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  void startScan() {
+    throw UnimplementedError('startScan() has not been implemented.');
+  }
+
+  void stopScan() {
+    throw UnimplementedError('stopScan() has not been implemented.');
+  }
+
+  void disconnect() {
+    throw UnimplementedError('disconnect() has not been implemented.');
+  }
+
+  void bondDevice() {
+    throw UnimplementedError('bondDevice() has not been implemented.');
   }
 }
