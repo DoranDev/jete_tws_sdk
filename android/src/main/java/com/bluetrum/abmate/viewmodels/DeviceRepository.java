@@ -217,10 +217,21 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
      * @return 是否已经配对
      */
     private boolean isBondedDevice(String deviceAddress) {
+//        if (mBondedDevices == null) {
+//            updateBondedDevices();
+//        }
+//        return mBondedDevices != null && mBondedDevices.stream().anyMatch(device -> device.getAddress().equals(deviceAddress));
         if (mBondedDevices == null) {
-            updateBondedDevices();
+            return false;
         }
-        return mBondedDevices != null && mBondedDevices.stream().anyMatch(device -> device.getAddress().equals(deviceAddress));
+
+        for (BluetoothDevice device : mBondedDevices) {
+            if (device.getAddress().equals(deviceAddress)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void bondDevice(ABDevice device) {

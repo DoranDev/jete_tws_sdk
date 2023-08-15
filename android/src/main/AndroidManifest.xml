@@ -1,10 +1,30 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="id.doran.jete_tws_sdk"
   xmlns:tools="http://schemas.android.com/tools">
+    <!-- ！！！OTA选择文件测试用，不要在正式发布软件使用！！！ -->
+    <!-- !!! Select FOT file for testing OTA, DO NOT use in release version -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+
+    <uses-feature android:name="android.hardware.bluetooth" android:required="true" />
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+
+    <!-- XIAOMI 12, MIUI 13.0.23, Android 12, crash occurred while using SPP -->
+    <!-- Solution: Add the tools:remove attribute, instead of android:maxSdkVersion="30" -->
+    <!-- Refer to https://stackoverflow.com/a/72370969 -->
     <uses-permission android:name="android.permission.BLUETOOTH"
-        android:maxSdkVersion="30"/>
+        tools:remove="android:maxSdkVersion" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30"/>
+        tools:remove="android:maxSdkVersion" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"
         android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
+
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 </manifest>
