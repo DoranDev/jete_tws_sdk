@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import com.bluetrum.abmate.BuildConfig
 import com.bluetrum.abmate.utils.Utils
 import com.bluetrum.abmate.viewmodels.DefaultDeviceCommManager
 import com.bluetrum.abmate.viewmodels.DeviceRepository
@@ -13,16 +14,19 @@ import com.bluetrum.devicemanager.models.ABDevice
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import pub.devrel.easypermissions.EasyPermissions
-import java.util.Arrays
+import timber.log.Timber
+import timber.log.Timber.DebugTree
 
 
 /** JeteTwsSdkPlugin */
-class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler,ActivityAware{
+@SuppressLint("LogNotTimber")
+class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
   private lateinit var channel : MethodChannel
   private lateinit var mContext : Context
   private lateinit var mActivity: Activity
@@ -32,8 +36,91 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler,ActivityAware{
   private lateinit var mDeviceRepository: DeviceRepository
   private val PERMISSIONS_REQUEST_CODE = 999
 
-  @SuppressLint("LogNotTimber")
+  private var scannerResultChannel: EventChannel? = null
+  private var scannerResultSink : EventChannel.EventSink? = null
+  private val scannerResultHandler = object : EventChannel.StreamHandler {
+      override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+        scannerResultSink = eventSink
+      }
+      override fun onCancel(o: Any?) {}
+    }
+
+  private var scannerStateChannel: EventChannel? = null
+  private var scannerStateSink : EventChannel.EventSink? = null
+  private val scannerStateHandler = object : EventChannel.StreamHandler {
+      override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+        scannerStateSink = eventSink
+      }
+      override fun onCancel(o: Any?) {}
+    }
+
+  private var deviceConnectionStateChannel: EventChannel? = null
+  private var deviceConnectionStateSink : EventChannel.EventSink? = null
+  private val deviceConnectionStateHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      deviceConnectionStateSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  private var popupDeviceChannel: EventChannel? = null
+  private var popupDeviceSink : EventChannel.EventSink? = null
+  private val popupDeviceHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      popupDeviceSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  private var activeDeviceChannel: EventChannel? = null
+  private var activeDeviceSink : EventChannel.EventSink? = null
+  private val activeDeviceHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      activeDeviceSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  private var devicePowerChannel: EventChannel? = null
+  private var devicePowerSink : EventChannel.EventSink? = null
+  private val devicePowerHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      devicePowerSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  private var scanningStateChannel: EventChannel? = null
+  private var scanningStateSink : EventChannel.EventSink? = null
+  private val scanningStateHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      scanningStateSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  private var deviceFirmwareVersionChannel: EventChannel? = null
+  private var deviceFirmwareVersionSink : EventChannel.EventSink? = null
+  private val deviceFirmwareVersionHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      deviceFirmwareVersionSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
   private fun initScanner() {
+    mScannerRepository.scannerResults.observeForever{ liveData ->
+      liveData.devices.forEach { value ->
+        Log.d("scannerResults", value.toString())
+      }
+    }
+
+    mScannerRepository.scannerState.observeForever{ liveData ->
+      Log.d("scannerState", liveData.toString())
+    }
+  }
+
+  private fun initDevice() {
     // Observe scannerViewModel livedata
     mDeviceRepository.deviceConnectionState.observeForever { state ->
       Log.d("deviceConnectionState","$state")
@@ -70,26 +157,32 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler,ActivityAware{
       Log.d("scanningState","$scanning")
     }
 
-    mScannerRepository.scannerResults.observeForever{ liveData ->
-      Log.d("scannerResults","${liveData.devices}")
+    mDeviceRepository.deviceFirmwareVersion.observeForever { value ->
+      Log.d("deviceFirmwareVersion","$value")
     }
+
+
   }
 
   private fun startScan() {
-    mDeviceRepository.startScan()
+    Log.d("startScan","startScan")
+    mScannerRepository.startScan()
   }
 
   private fun stopScan() {
-    mDeviceRepository.stopScan()
+    Log.d("stopScan","stopScan")
+    mScannerRepository.stopScan()
   }
 
   private fun bondDevice() {
     val device: ABDevice? = mDeviceRepository.activeDevice.value
+    Log.d("bondDevice","$device")
     mDeviceRepository.bondDevice(device)
   }
 
 
   private fun disconnect() {
+    Log.d("disconnect","disconnect")
     mDeviceRepository.disconnect()
   }
 
@@ -97,11 +190,32 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler,ActivityAware{
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "jete_tws_sdk")
     channel.setMethodCallHandler(this)
     mContext = flutterPluginBinding.applicationContext
-//    mDeviceManagerApi = DeviceManagerApi(mContext)
-//    mDefaultDeviceCommManager = DefaultDeviceCommManager()
-//    mScannerRepository = ScannerRepository(mContext,mDeviceManagerApi)
-//    mDeviceRepository = DeviceRepository(mContext,mDeviceManagerApi,mDefaultDeviceCommManager)
-//    initScanner()
+
+    scannerResultChannel = EventChannel(flutterPluginBinding.binaryMessenger, "scannerResult")
+    scannerResultChannel!!.setStreamHandler(scannerResultHandler)
+
+    scannerStateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "scannerState")
+    scannerStateChannel!!.setStreamHandler(scannerStateHandler)
+
+    deviceConnectionStateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "deviceConnectionState")
+    deviceConnectionStateChannel!!.setStreamHandler(deviceConnectionStateHandler)
+
+    popupDeviceChannel = EventChannel(flutterPluginBinding.binaryMessenger, "popupDevice")
+    popupDeviceChannel!!.setStreamHandler(popupDeviceHandler)
+
+    activeDeviceChannel = EventChannel(flutterPluginBinding.binaryMessenger, "activeDevice")
+    activeDeviceChannel!!.setStreamHandler(activeDeviceHandler)
+
+    devicePowerChannel = EventChannel(flutterPluginBinding.binaryMessenger, "devicePower")
+    devicePowerChannel!!.setStreamHandler(devicePowerHandler)
+
+    scanningStateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "scanningState")
+    scanningStateChannel!!.setStreamHandler(scanningStateHandler)
+
+    deviceFirmwareVersionChannel = EventChannel(flutterPluginBinding.binaryMessenger, "deviceFirmwareVersion")
+    deviceFirmwareVersionChannel!!.setStreamHandler(deviceFirmwareVersionHandler)
+
+
   }
 
   override fun onMethodCall( call: MethodCall,  result: Result) {
@@ -119,6 +233,9 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler,ActivityAware{
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+    if (BuildConfig.DEBUG) {
+      Timber.plant(DebugTree())
+    }
     mActivity = binding.activity
     val rationale = arrayOf("Playing music need read external storage permission.")
     val permissions =mutableListOf(
@@ -148,6 +265,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler,ActivityAware{
     mScannerRepository = ScannerRepository(mActivity,mDeviceManagerApi)
     mDeviceRepository = DeviceRepository(mActivity,mDeviceManagerApi,mDefaultDeviceCommManager)
     initScanner()
+    initDevice()
   }
 
   override fun onDetachedFromActivityForConfigChanges() {

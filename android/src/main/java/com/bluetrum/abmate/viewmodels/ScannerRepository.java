@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -46,13 +47,15 @@ public class ScannerRepository {
         @Override
         public void onScanResult(final int callbackType, @NonNull final ScanResult result) {
 //            Timber.tag(TAG).v("scan result = %s", result);
+           // Log.d("onScanResult",result.toString());
+
             try {
                 final ScanRecord scanRecord = result.getScanRecord();
                 // 过滤beacon，符合条件的才会添加到列表
                 if (scanRecord != null && scanRecord.getBytes() != null) {
                     // If the packet has been obtained while Location was disabled, mark Location as not required
-                    if (Utils.isLocationRequired(mContext) && !Utils.isLocationEnabled(mContext))
-                        Utils.markLocationNotRequired(mContext);
+//                    if (Utils.isLocationRequired(mContext) && !Utils.isLocationEnabled(mContext))
+//                        Utils.markLocationNotRequired(mContext);
 
                     updateScannerLiveData(result);
                 }
@@ -166,7 +169,6 @@ public class ScannerRepository {
         if (mScannerStateLiveData.isScanning()) {
             return;
         }
-
         mScannerStateLiveData.scanningStarted();
         BleScanManager.startScan(null, mScanCallbacks);
     }

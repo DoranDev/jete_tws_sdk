@@ -57,17 +57,17 @@ android {
 
 
     flavorDimensions "custom"
-    productFlavors {
-        bluetrum {
-            dimension "custom"
-            buildConfigField("String", "BROADCAST_SERVICE_UUID", '"0000fdb3-0000-1000-8000-00805f9b34fb"')
-            buildConfigField("int", "MANUFACTURER_ID", '0x0642')
-            buildConfigField("int", "BRAND_ID", '0') // 24bit, High 8bit is AgentId
-            buildConfigField("String", "CUSTOM_SPP_UUID", '"B6632277-0642-458B-A7A0-23FB1DC92C93"')
-            buildConfigField("String", "WEB_URL_LEGAL", '"http://www.bluetrum.com/doc/abmate_agreement_220228.html"')
-            buildConfigField("String", "WEB_URL_PRIVACY", '"http://www.bluetrum.com/doc/abmate_privacy_220228.html"')
-        }
-    }
+//    productFlavors {
+//        bluetrum {
+//            dimension "custom"
+//            buildConfigField("String", "BROADCAST_SERVICE_UUID", '"0000fdb3-0000-1000-8000-00805f9b34fb"')
+//            buildConfigField("int", "MANUFACTURER_ID", '0x0642')
+//            buildConfigField("int", "BRAND_ID", '0') // 24bit, High 8bit is AgentId
+//            buildConfigField("String", "CUSTOM_SPP_UUID", '"B6632277-0642-458B-A7A0-23FB1DC92C93"')
+//            buildConfigField("String", "WEB_URL_LEGAL", '"http://www.bluetrum.com/doc/abmate_agreement_220228.html"')
+//            buildConfigField("String", "WEB_URL_PRIVACY", '"http://www.bluetrum.com/doc/abmate_privacy_220228.html"')
+//        }
+//    }
 
     externalNativeBuild {
         cmake {

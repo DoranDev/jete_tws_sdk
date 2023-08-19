@@ -1,19 +1,54 @@
-import 'jete_tws_sdk_platform_interface.dart';
+import 'package:flutter/services.dart';
 
 class JeteTwsSdk {
-  void startScan() {
-    JeteTwsSdkPlatform.instance.startScan();
-  }
+  final methodChannel = const MethodChannel('jete_tws_sdk');
 
-  void stopScan() {
-    JeteTwsSdkPlatform.instance.stopScan();
-  }
+  Future bondDevice() => methodChannel.invokeMethod('bondDevice');
+  Future disconnect() => methodChannel.invokeMethod('disconnect');
+  Future startScan() => methodChannel.invokeMethod('startScan');
+  Future stopScan() => methodChannel.invokeMethod('stopScan');
 
-  void disconnect() {
-    JeteTwsSdkPlatform.instance.disconnect();
-  }
+  final EventChannel _scannerResultChannel =
+      const EventChannel('scannerResult');
+  Stream get scannerResultStream => _scannerResultChannel
+      .receiveBroadcastStream(_scannerResultChannel.name)
+      .cast();
 
-  void bondDevice() {
-    JeteTwsSdkPlatform.instance.bondDevice();
-  }
+  final EventChannel _scannerStateChannel = const EventChannel('scannerState');
+  Stream get scannerStateStream => _scannerStateChannel
+      .receiveBroadcastStream(_scannerStateChannel.name)
+      .cast();
+
+  final EventChannel _deviceConnectionStateChannel =
+      const EventChannel('deviceConnectionState');
+  Stream get deviceConnectionStateStream => _deviceConnectionStateChannel
+      .receiveBroadcastStream(_deviceConnectionStateChannel.name)
+      .cast();
+
+  final EventChannel _popupDeviceChannel = const EventChannel('popupDevice');
+  Stream get popupDeviceStream => _popupDeviceChannel
+      .receiveBroadcastStream(_popupDeviceChannel.name)
+      .cast();
+
+  final EventChannel _activeDeviceChannel = const EventChannel('activeDevice');
+  Stream get activeDeviceStream => _activeDeviceChannel
+      .receiveBroadcastStream(_activeDeviceChannel.name)
+      .cast();
+
+  final EventChannel _devicePowerChannel = const EventChannel('devicePower');
+  Stream get devicePowerStream => _devicePowerChannel
+      .receiveBroadcastStream(_devicePowerChannel.name)
+      .cast();
+
+  final EventChannel _scanningStateChannel =
+      const EventChannel('scanningState');
+  Stream get scanningStateStream => _scanningStateChannel
+      .receiveBroadcastStream(_scanningStateChannel.name)
+      .cast();
+
+  final EventChannel _deviceFirmwareVersionChannel =
+      const EventChannel('deviceFirmwareVersion');
+  Stream get deviceFirmwareVersionStream => _deviceFirmwareVersionChannel
+      .receiveBroadcastStream(_deviceFirmwareVersionChannel.name)
+      .cast();
 }

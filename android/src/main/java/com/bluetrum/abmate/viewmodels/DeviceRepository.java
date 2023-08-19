@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
@@ -54,7 +55,7 @@ import no.nordicsemi.android.support.v18.scanner.ScanCallback;
 import no.nordicsemi.android.support.v18.scanner.ScanRecord;
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
 import timber.log.Timber;
-
+@SuppressLint("LogNotTimber")
 @Singleton
 public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEarbuds.DataDelegate, DeviceCommManager.DeviceResponseErrorHandler {
 
@@ -689,7 +690,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
 
     private void handleEarbudsFound(@NonNull ABEarbuds device) {
         final String deviceAddress = device.getAddress();
-
+      //  Log.d("handleEarbudsFound",deviceAddress);
         // Check if it's the device disconnected by user last time
         if (deviceAddress.equals(deviceAddressDisconnectedByUser)) {
             return;
@@ -772,9 +773,11 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
 
     private final ScanCallback mScanCallbacks = new ScanCallback() {
 
+
         @Override
         public void onScanResult(final int callbackType, @NonNull final ScanResult result) {
             // Ignore device with weak signal
+
             if (result.getRssi() <= getMinRssi()) {
                 return;
             }
@@ -784,11 +787,14 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
                 final ScanRecord scanRecord = result.getScanRecord();
                 // 过滤beacon，符合条件的才会添加到列表
                 if (scanRecord != null && scanRecord.getBytes() != null) {
-                    // 广播包过滤设备
+                    // broadcast packet filtering device
+                 //   Log.d("onScanResult 1",result.toString());
                     byte[] manufacturerSpecificData = scanRecord.getManufacturerSpecificData(ABEarbuds.MANUFACTURER_ID);
                     if (DeviceBeacon.isDeviceBeacon(manufacturerSpecificData)) {
                         DeviceBeacon deviceBeacon = DeviceBeacon.getDeviceBeacon(manufacturerSpecificData);
-                        if (deviceBeacon != null && (deviceBeacon.getAgentId() == BuildConfig.BRAND_ID >> 16)) { // 过滤代理产品
+                       // Log.d("onScanResult 2",result.toString());
+                        if (deviceBeacon != null && (deviceBeacon.getAgentId() == BuildConfig.BRAND_ID >> 16)) {
+                           // Log.d("onScanResult 3",result.toString());// filter proxy products
                             onResult(result, deviceBeacon);
                         }
                     }
@@ -813,17 +819,17 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
     public void startScan() {
         if (!mAdapter.isEnabled())
             return;
-
-        if (!Utils.isBluetoothNeededPermissionGranted(mContext))
-            return;
-
+        Log.d("mAdapter","true");
+//        if (!Utils.isBluetoothNeededPermissionGranted(mContext))
+//            return;
+//        Log.d("BluetoothPermission","true");
         if (mIsScanning)
             return;
-
+        Log.d("mIsScanning","true");
         mIsScanning = true;
         mScanningState.postValue(true);
         BleScanManager.startScan(null, mScanCallbacks);
-        Timber.v("Scan started");
+        Log.d("Scan started","true");
     }
 
     public void stopScan() {
