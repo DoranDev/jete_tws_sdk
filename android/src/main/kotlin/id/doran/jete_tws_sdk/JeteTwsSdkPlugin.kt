@@ -8,6 +8,7 @@ import com.bluetrum.abmate.BuildConfig
 import com.bluetrum.abmate.utils.Utils
 import com.bluetrum.abmate.viewmodels.DefaultDeviceCommManager
 import com.bluetrum.abmate.viewmodels.DeviceRepository
+import com.bluetrum.abmate.viewmodels.ScannerLiveData
 import com.bluetrum.abmate.viewmodels.ScannerRepository
 import com.bluetrum.devicemanager.DeviceManagerApi
 import com.bluetrum.devicemanager.models.ABDevice
@@ -34,7 +35,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
   private lateinit var mDeviceManagerApi: DeviceManagerApi
   private lateinit var mScannerRepository: ScannerRepository
   private lateinit var mDeviceRepository: DeviceRepository
-  private val PERMISSIONS_REQUEST_CODE = 999
+  private val permissionRequestCode = 999
 
   private var scannerResultChannel: EventChannel? = null
   private var scannerResultSink : EventChannel.EventSink? = null
@@ -108,11 +109,33 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     override fun onCancel(o: Any?) {}
   }
 
+  private var livedata : ScannerLiveData? = null
+
+  private fun indexFromAdress(bleAddress: String, mDevices: List<ABDevice>): Int {
+    for ((i, device) in mDevices.withIndex()) {
+      if (device.matches(bleAddress)) return i
+    }
+    return -1
+  }
+
+  private val mDevices = mutableListOf<Any>()
+
   private fun initScanner() {
-    mScannerRepository.scannerResults.observeForever{ liveData ->
-      liveData.devices.forEach { value ->
+    mScannerRepository.scannerResults.observeForever{ data ->
+      livedata = data
+      data.devices.forEach { value ->
         Log.d("scannerResults", value.toString())
+        val item: MutableMap<String, Any> = HashMap()
+        item["deviceName"] = value.name
+        item["deviceMacAddress"] = value.address
+        if (!(mDevices.contains(item))) {
+          mDevices.add(item)
+        }
       }
+
+      //         Handler(Looper.getMainLooper()).post {
+      scannerResultSink?.success(mDevices)
+//          }
     }
 
     mScannerRepository.scannerState.observeForever{ liveData ->
@@ -148,6 +171,11 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     mDeviceRepository.devicePower.observeForever { power ->
       // handle power
       Log.d("devicePower","$power")
+      val item: MutableMap<String, Any> = HashMap()
+      item["devicePower"] = power
+      //         Handler(Looper.getMainLooper()).post {
+      devicePowerSink?.success(item)
+//          }
     }
 
     // other observers
@@ -159,13 +187,16 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
 
     mDeviceRepository.deviceFirmwareVersion.observeForever { value ->
       Log.d("deviceFirmwareVersion","$value")
+      val item: MutableMap<String, Any> = HashMap()
+      item["deviceFirmwareVersion"] = value
     }
-
+    
 
   }
 
   private fun startScan() {
     Log.d("startScan","startScan")
+    mDevices.clear()
     mScannerRepository.startScan()
   }
 
@@ -174,8 +205,9 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     mScannerRepository.stopScan()
   }
 
-  private fun bondDevice() {
-    val device: ABDevice? = mDeviceRepository.activeDevice.value
+  private fun bondDevice(address:String) {
+    val index: Int = indexFromAdress(address,mScannerRepository.scannerResults.devices)
+    val device: ABDevice = mScannerRepository.scannerResults.devices[index]
     Log.d("bondDevice","$device")
     mDeviceRepository.bondDevice(device)
   }
@@ -185,6 +217,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     Log.d("disconnect","disconnect")
     mDeviceRepository.disconnect()
   }
+  
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "jete_tws_sdk")
@@ -222,7 +255,12 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     when(call.method){
       "startScan"  -> startScan()
       "stopScan"  -> stopScan()
-      "bondDevice"  -> bondDevice()
+      "bondDevice"  -> {
+        val bmac: String? = call.argument<String>("bmac")
+        if (bmac != null) {
+          bondDevice(bmac)
+        }
+      }
       "disconnect"  -> disconnect()
       else -> result.notImplemented()
     }
@@ -257,7 +295,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     EasyPermissions.requestPermissions(
       mActivity,
       rationale[0],
-      PERMISSIONS_REQUEST_CODE,
+      permissionRequestCode,
       permissions.toTypedArray().toString()
     )
     mDeviceManagerApi = DeviceManagerApi(mActivity)
@@ -280,4 +318,3 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
 
   }
 }
-
