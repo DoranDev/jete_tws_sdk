@@ -12,6 +12,9 @@ import com.bluetrum.abmate.viewmodels.DefaultDeviceCommManager
 import com.bluetrum.abmate.viewmodels.DeviceRepository
 import com.bluetrum.abmate.viewmodels.ScannerRepository
 import com.bluetrum.devicemanager.DeviceManagerApi
+import com.bluetrum.devicemanager.cmd.Command
+import com.bluetrum.devicemanager.cmd.Request
+import com.bluetrum.devicemanager.cmd.request.DeviceInfoRequest
 import com.bluetrum.devicemanager.models.ABDevice
 import com.google.gson.Gson
 import com.google.gson.JsonDeserializationContext
@@ -255,7 +258,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
 
   private fun devicePower() {
     Log.d("devicePower","devicePower")
-    mDeviceRepository.devicePower
+    mDeviceRepository.deviceCommManager.sendRequest(DeviceInfoRequest(Command.INFO_DEVICE_POWER))
   }
   
 
