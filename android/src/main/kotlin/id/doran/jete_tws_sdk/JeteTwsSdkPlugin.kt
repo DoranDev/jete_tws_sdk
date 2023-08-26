@@ -252,6 +252,11 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     Log.d("disconnect","disconnect")
     mDeviceRepository.disconnect()
   }
+
+  private fun devicePower() {
+    Log.d("devicePower","devicePower")
+    mDeviceRepository.devicePower
+  }
   
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -297,6 +302,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
         }
       }
       "disconnect"  -> disconnect()
+      "devicePower"  -> devicePower()
       else -> result.notImplemented()
     }
   }

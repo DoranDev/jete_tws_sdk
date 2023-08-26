@@ -10,6 +10,7 @@ class JeteTwsSdk {
   Future disconnect() => methodChannel.invokeMethod('disconnect');
   Future startScan() => methodChannel.invokeMethod('startScan');
   Future stopScan() => methodChannel.invokeMethod('stopScan');
+  Future devicePower() => methodChannel.invokeMethod('devicePower');
 
   final EventChannel _scannerResultChannel =
       const EventChannel('scannerResult');
