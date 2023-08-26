@@ -7,7 +7,6 @@ import android.content.Context
 import android.util.Log
 import com.bluetrum.abmate.BuildConfig
 import com.bluetrum.abmate.auth.Authenticator
-import com.bluetrum.abmate.di.ABApplication.CrashReportingTree
 import com.bluetrum.abmate.utils.Utils
 import com.bluetrum.abmate.viewmodels.DefaultDeviceCommManager
 import com.bluetrum.abmate.viewmodels.DeviceRepository
