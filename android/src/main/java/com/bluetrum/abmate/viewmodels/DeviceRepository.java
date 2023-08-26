@@ -757,10 +757,10 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
 
     private void handleProduct(final ScanResult result, final DeviceBeacon deviceBeacon) {
         // TODO: 定义产品ID
-        if (deviceBeacon.getProductId() == 1) {
+       // if (deviceBeacon.getProductId() == 1) {
             ABEarbuds device = new ABEarbuds(result, (EarbudsBeacon) deviceBeacon);
             handleEarbudsFound(device);
-        }
+      //  }
     }
 
     private void onResult(final ScanResult result, final DeviceBeacon deviceBeacon) {
