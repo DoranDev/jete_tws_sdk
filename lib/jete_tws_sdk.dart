@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 
 class JeteTwsSdk {
   final methodChannel = const MethodChannel('jete_tws_sdk');
 
-  Future bondDevice({required String address}) =>
-      methodChannel.invokeMethod('bondDevice', {'bmac': address});
+  Future bondDevice({required device}) =>
+      methodChannel.invokeMethod('bondDevice', {'bmac': jsonEncode(device)});
   Future disconnect() => methodChannel.invokeMethod('disconnect');
   Future startScan() => methodChannel.invokeMethod('startScan');
   Future stopScan() => methodChannel.invokeMethod('stopScan');

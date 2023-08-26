@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
+import timber.log.Timber;
 
 public class ScannerLiveData extends LiveData<ScannerLiveData> {
     private final List<ABDevice> mDevices = new ArrayList<>();
@@ -23,14 +24,17 @@ public class ScannerLiveData extends LiveData<ScannerLiveData> {
 
     void deviceDiscovered(final ScanResult result, final DeviceBeacon beacon) {
         ABDevice device = null;
-
+//        Timber.tag("getProductId").d(String.valueOf(beacon.getProductId()));
+//        Timber.tag("getAgentId").d(String.valueOf(beacon.getAgentId()));
+//        Timber.tag("getBrandId").d(String.valueOf(beacon.getBrandId()));
+//        Timber.tag("getBeaconVersion").d(String.valueOf(beacon.getBeaconVersion()));
         final int index = indexOf(result.getDevice().getAddress());
         if (index == -1) {
-            // TODO: 定义产品ID
-            if (beacon.getProductId() == 1) {
+           // if (beacon.getProductId() == 0) {
                 device = new ABEarbuds(result, (EarbudsBeacon) beacon);
+                Timber.tag("add device").d(String.valueOf(device.getBleAddress()));
                 mDevices.add(device);
-            }
+           // }
             mUpdatedDeviceIndex = null;
         } else {
             device = mDevices.get(index);

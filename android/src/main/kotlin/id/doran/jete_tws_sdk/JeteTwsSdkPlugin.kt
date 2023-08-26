@@ -1,17 +1,25 @@
 package id.doran.jete_tws_sdk
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.util.Log
 import com.bluetrum.abmate.BuildConfig
+import com.bluetrum.abmate.auth.Authenticator
+import com.bluetrum.abmate.di.ABApplication.CrashReportingTree
 import com.bluetrum.abmate.utils.Utils
 import com.bluetrum.abmate.viewmodels.DefaultDeviceCommManager
 import com.bluetrum.abmate.viewmodels.DeviceRepository
-import com.bluetrum.abmate.viewmodels.ScannerLiveData
 import com.bluetrum.abmate.viewmodels.ScannerRepository
 import com.bluetrum.devicemanager.DeviceManagerApi
 import com.bluetrum.devicemanager.models.ABDevice
+import com.google.gson.Gson
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonParseException
+import com.google.gson.reflect.TypeToken
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -23,6 +31,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import pub.devrel.easypermissions.EasyPermissions
 import timber.log.Timber
 import timber.log.Timber.DebugTree
+import java.lang.reflect.Type
 
 
 /** JeteTwsSdkPlugin */
@@ -35,12 +44,14 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
   private lateinit var mDeviceManagerApi: DeviceManagerApi
   private lateinit var mScannerRepository: ScannerRepository
   private lateinit var mDeviceRepository: DeviceRepository
+
   private val permissionRequestCode = 999
 
   private var scannerResultChannel: EventChannel? = null
   private var scannerResultSink : EventChannel.EventSink? = null
   private val scannerResultHandler = object : EventChannel.StreamHandler {
       override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+        Timber.tag("scannerResultSink").d("onListen")
         scannerResultSink = eventSink
       }
       override fun onCancel(o: Any?) {}
@@ -109,30 +120,32 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     override fun onCancel(o: Any?) {}
   }
 
-  private var livedata : ScannerLiveData? = null
-
-  private fun indexFromAdress(bleAddress: String, mDevices: List<ABDevice>): Int {
-    for ((i, device) in mDevices.withIndex()) {
-      if (device.matches(bleAddress)) return i
-    }
-    return -1
-  }
-
-  private val mDevices = mutableListOf<Any>()
+  private val mDevices = mutableListOf<Map<String, Any>>()
+  private val mABDevices  = mutableListOf<ABDevice>()
 
   private fun initScanner() {
     mScannerRepository.scannerResults.observeForever{ data ->
-      livedata = data
       data.devices.forEach { value ->
-        Log.d("scannerResults", value.toString())
         val item: MutableMap<String, Any> = HashMap()
-        item["deviceName"] = value.name
+        item["deviceName"] = value.bleName
         item["deviceMacAddress"] = value.address
-        if (!(mDevices.contains(item))) {
+        item["deviceBleAddress"] = value.bleAddress
+        item["rssi"] = value.rssi
+       // item["abDevice"] = gson.toJson(value)
+       // Timber.tag("scannerResults").d(item.toString())
+        val existingIndex =  mDevices.indexOfFirst { (it as? Map<String, Any>)?.get("deviceMacAddress") == item["deviceMacAddress"] }
+
+        if(existingIndex != -1){
+          mDevices[existingIndex] = item
+        }else{
+          mABDevices.add(value)
           mDevices.add(item)
         }
-      }
 
+        mDevices.sortWith(compareByDescending { (it as? Map<String, Any>)?.get("rssi") as? Int ?: -100 })
+      }
+      mDeviceRepository
+//      Timber.tag("mDevices").d(mDevices.toString())
       //         Handler(Looper.getMainLooper()).post {
       scannerResultSink?.success(mDevices)
 //          }
@@ -140,6 +153,12 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
 
     mScannerRepository.scannerState.observeForever{ liveData ->
       Log.d("scannerState", liveData.toString())
+      val item: MutableMap<String, Any> = HashMap()
+      item["isEmpty"] = liveData.isEmpty
+      item["isBluetoothEnabled"] = liveData.isBluetoothEnabled
+      item["isScanning"] = liveData.isScanning
+      item["isLocationEnabled"] = liveData.isLocationEnabled
+      scannerStateSink?.success(item)
     }
   }
 
@@ -147,6 +166,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     // Observe scannerViewModel livedata
     mDeviceRepository.deviceConnectionState.observeForever { state ->
       Log.d("deviceConnectionState","$state")
+      deviceConnectionStateSink?.success(state)
       when (state) {
         DeviceRepository.DEVICE_CONNECTION_STATE_IDLE -> {
           // handle idle state
@@ -161,21 +181,33 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     mDeviceRepository.popupDevice.observeForever { device ->
       // handle popup device
       Log.d("popupDevice","$device")
+      val item: MutableMap<String, Any> = HashMap()
+      item["deviceName"] = device.bleName
+      item["deviceMacAddress"] = device.address
+      item["deviceBleAddress"] = device.bleAddress
+      item["rssi"] = device.rssi
+      popupDeviceSink?.success(item)
     }
 
     mDeviceRepository.activeDevice.observeForever { device ->
       // handle active device
       Log.d("activeDevice","$device")
+      val item: MutableMap<String, Any> = HashMap()
+      item["deviceName"] = device.bleName
+      item["deviceMacAddress"] = device.address
+      item["deviceBleAddress"] = device.bleAddress
+      item["rssi"] = device.rssi
+      activeDeviceSink?.success(item)
     }
 
     mDeviceRepository.devicePower.observeForever { power ->
       // handle power
       Log.d("devicePower","$power")
-      val item: MutableMap<String, Any> = HashMap()
-      item["devicePower"] = power
-      //         Handler(Looper.getMainLooper()).post {
+      val item: MutableMap<String, Any?> = HashMap()
+      item["casePower"] = power.casePower
+      item["leftSidePower"] = power.leftSidePower
+      item["rightSidePower"] = power.rightSidePower
       devicePowerSink?.success(item)
-//          }
     }
 
     // other observers
@@ -183,15 +215,13 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     mDeviceRepository.scanningState.observeForever { scanning ->
       // handle scanning state
       Log.d("scanningState","$scanning")
+      scanningStateSink?.success(scanning)
     }
 
     mDeviceRepository.deviceFirmwareVersion.observeForever { value ->
       Log.d("deviceFirmwareVersion","$value")
-      val item: MutableMap<String, Any> = HashMap()
-      item["deviceFirmwareVersion"] = value
+      deviceFirmwareVersionSink?.success(value)
     }
-    
-
   }
 
   private fun startScan() {
@@ -204,12 +234,18 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     Log.d("stopScan","stopScan")
     mScannerRepository.stopScan()
   }
-
-  private fun bondDevice(address:String) {
-    val index: Int = indexFromAdress(address,mScannerRepository.scannerResults.devices)
-    val device: ABDevice = mScannerRepository.scannerResults.devices[index]
-    Log.d("bondDevice","$device")
-    mDeviceRepository.bondDevice(device)
+  private var gson = Gson()
+  private fun bondDevice(device:String) {
+//    val authGson = GsonBuilder()
+//      .registerTypeAdapter(Authenticator::class.java, AuthenticatorDeserializer())
+//      .create()
+//    val device: ABDevice = authGson.fromJson(abDevice, ABEarbuds::class.java)
+    Log.d("abDevice","$device")
+    val type = object : TypeToken<HashMap<String, Any>>() {}.type
+    val abDevice: ABDevice? = deviceFromFlutter(device = gson.fromJson(device,type), devices = mABDevices)
+    if(abDevice!=null){
+      mDeviceRepository.bondDevice(abDevice)
+    }
   }
 
 
@@ -316,5 +352,54 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
 
   override fun onDetachedFromActivity() {
 
+  }
+
+  private fun deviceFromFlutter(device: HashMap<String, Any?>, devices : List<ABDevice>):ABDevice? {
+//    item["deviceMacAddress"] = value.address
+//    item["deviceBleAddress"] = value.bleAddress
+    if (devices.isEmpty()) {
+      Timber.tag("deviceFromFlutter").d("devices list is empty")
+      return null
+    }
+
+    devices.forEach{
+      Timber.tag("deviceFromFlutter").d(it.bleAddress)
+      if(it.bleAddress == device["deviceBleAddress"] ){
+        return it
+      }
+    }
+    return null
+  }
+}
+
+
+class AuthenticatorDeserializer : JsonDeserializer<Authenticator?> {
+  @Throws(JsonParseException::class)
+  override fun deserialize(
+    json: JsonElement,
+    typeOfT: Type,
+    context: JsonDeserializationContext
+  ): Authenticator? {
+    if (json.isJsonNull) {
+      // Handle null case if needed
+      return null
+    }
+    val jsonObject = json.asJsonObject
+    val implementationClassElement = jsonObject["implementationClass"]
+    if (implementationClassElement == null || implementationClassElement.isJsonNull) {
+      // Handle missing or null element
+      return null
+    }
+    val implementationClassName = implementationClassElement.asString
+    return try {
+      val implementationClass = Class.forName(implementationClassName)
+      implementationClass.newInstance() as Authenticator
+    } catch (e: ClassNotFoundException) {
+      throw JsonParseException("Error creating instance of Authenticator implementation", e)
+    } catch (e: IllegalAccessException) {
+      throw JsonParseException("Error creating instance of Authenticator implementation", e)
+    } catch (e: InstantiationException) {
+      throw JsonParseException("Error creating instance of Authenticator implementation", e)
+    }
   }
 }

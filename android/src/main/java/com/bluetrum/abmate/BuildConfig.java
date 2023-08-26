@@ -5,7 +5,8 @@ import javax.inject.Singleton;
 @Singleton
 public class BuildConfig  {
     public static final String BROADCAST_SERVICE_UUID            = "0000fdb3-0000-1000-8000-00805f9b34fb";
-    public static final int MANUFACTURER_ID         = 0x0642;
+  //  public static final int MANUFACTURER_ID         = 0x0642;
+   public static final int MANUFACTURER_ID         = 1602;
     public static final int BRAND_ID         = 0;
     public static final String CUSTOM_SPP_UUID         = "B6632277-0642-458B-A7A0-23FB1DC92C93";
     public static final String WEB_URL_LEGAL         = "http://www.bluetrum.com/doc/abmate_agreement_220228.html";

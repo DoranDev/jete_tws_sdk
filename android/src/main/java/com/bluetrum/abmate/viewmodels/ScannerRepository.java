@@ -47,8 +47,6 @@ public class ScannerRepository {
         @Override
         public void onScanResult(final int callbackType, @NonNull final ScanResult result) {
 //            Timber.tag(TAG).v("scan result = %s", result);
-           // Log.d("onScanResult",result.toString());
-
             try {
                 final ScanRecord scanRecord = result.getScanRecord();
                 // 过滤beacon，符合条件的才会添加到列表
@@ -131,10 +129,16 @@ public class ScannerRepository {
         final ScanRecord scanRecord = result.getScanRecord();
         if (scanRecord != null) {
             // 广播包过滤设备
+           // Timber.tag("scanRecord").d(scanRecord.toString());
             byte[] manufacturerSpecificData = scanRecord.getManufacturerSpecificData(ABEarbuds.MANUFACTURER_ID);
+//            if(manufacturerSpecificData!=null){
+//              Timber.tag("manufacturerSpecific").d(manufacturerSpecificData.toString());
+//            }
             if (DeviceBeacon.isDeviceBeacon(manufacturerSpecificData)) {
                 DeviceBeacon deviceBeacon = DeviceBeacon.getDeviceBeacon(manufacturerSpecificData);
+              //  Timber.tag("deviceBeacon").d(String.valueOf(deviceBeacon.getAgentId()));
                 if (deviceBeacon != null && (deviceBeacon.getAgentId() == BuildConfig.BRAND_ID >> 16)) { // 过滤代理产品
+                   // Timber.tag("updateScannerLiveData").d(result.toString());
                     mScannerLiveData.deviceDiscovered(result, deviceBeacon);
                     mScannerStateLiveData.deviceFound();
                 }
@@ -170,6 +174,7 @@ public class ScannerRepository {
             return;
         }
         mScannerStateLiveData.scanningStarted();
+        Timber.tag("startScan").d("scanningStarted");
         BleScanManager.startScan(null, mScanCallbacks);
     }
 
