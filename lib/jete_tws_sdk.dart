@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:jete_tws_sdk/model/device_info_model.dart';
 part 'tws_anc_mode.dart';
 part 'tws_auto_shutdown.dart';
 part 'tws_command.dart';
@@ -82,8 +83,12 @@ class JeteTwsSdk {
       .cast();
 
   final EventChannel _deviceInfoChannel = const EventChannel('deviceInfo');
-  Stream get deviceInfoStream =>
-      _deviceInfoChannel.receiveBroadcastStream(_deviceInfoChannel.name).cast();
+  Stream<DeviceInfo> get deviceInfoStream => _deviceInfoChannel
+          .receiveBroadcastStream(_deviceInfoChannel.name)
+          .map<DeviceInfo>((dynamic json) {
+        Map<String, dynamic> decodedJson = jsonDecode(json);
+        return DeviceInfo.fromJson(decodedJson);
+      });
 
   final EventChannel _scanningStateChannel =
       const EventChannel('scanningState');
