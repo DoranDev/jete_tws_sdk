@@ -13,7 +13,7 @@ public final class MusicControlRequest extends Request {
     private final byte controlType;
     private byte volume;
 
-    private MusicControlRequest(byte controlType) {
+    public MusicControlRequest(byte controlType) {
         super(COMMAND_MUSIC_CONTROL);
         this.controlType = controlType;
     }

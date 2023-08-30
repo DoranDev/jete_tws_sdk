@@ -6,21 +6,32 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import com.bluetrum.abmate.BuildConfig
-import com.bluetrum.abmate.auth.Authenticator
 import com.bluetrum.abmate.utils.Utils
 import com.bluetrum.abmate.viewmodels.DefaultDeviceCommManager
 import com.bluetrum.abmate.viewmodels.DeviceRepository
 import com.bluetrum.abmate.viewmodels.ScannerRepository
 import com.bluetrum.devicemanager.DeviceManagerApi
-import com.bluetrum.devicemanager.cmd.Command
 import com.bluetrum.devicemanager.cmd.Request
+import com.bluetrum.devicemanager.cmd.request.AncGainRequest
+import com.bluetrum.devicemanager.cmd.request.AncModeRequest
+import com.bluetrum.devicemanager.cmd.request.AutoAnswerRequest
+import com.bluetrum.devicemanager.cmd.request.AutoShutdownRequest
+import com.bluetrum.devicemanager.cmd.request.BluetoothNameRequest
+import com.bluetrum.devicemanager.cmd.request.ClearPairRecordRequest
 import com.bluetrum.devicemanager.cmd.request.DeviceInfoRequest
+import com.bluetrum.devicemanager.cmd.request.EqRequest
+import com.bluetrum.devicemanager.cmd.request.FactoryResetRequest
+import com.bluetrum.devicemanager.cmd.request.FindDeviceRequest
+import com.bluetrum.devicemanager.cmd.request.InEarDetectRequest
+import com.bluetrum.devicemanager.cmd.request.KeyRequest
+import com.bluetrum.devicemanager.cmd.request.LanguageRequest
+import com.bluetrum.devicemanager.cmd.request.LedSwitchRequest
+import com.bluetrum.devicemanager.cmd.request.MusicControlRequest
+import com.bluetrum.devicemanager.cmd.request.SoundEffect3dRequest
+import com.bluetrum.devicemanager.cmd.request.TransparencyGainRequest
+import com.bluetrum.devicemanager.cmd.request.WorkModeRequest
 import com.bluetrum.devicemanager.models.ABDevice
 import com.google.gson.Gson
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -33,12 +44,11 @@ import io.flutter.plugin.common.MethodChannel.Result
 import pub.devrel.easypermissions.EasyPermissions
 import timber.log.Timber
 import timber.log.Timber.DebugTree
-import java.lang.reflect.Type
 
 
 /** JeteTwsSdkPlugin */
 @SuppressLint("LogNotTimber")
-class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
+class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private lateinit var channel : MethodChannel
   private lateinit var mContext : Context
   private lateinit var mActivity: Activity
@@ -95,11 +105,11 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     override fun onCancel(o: Any?) {}
   }
 
-  private var devicePowerChannel: EventChannel? = null
-  private var devicePowerSink : EventChannel.EventSink? = null
-  private val devicePowerHandler = object : EventChannel.StreamHandler {
+  private var deviceInfoChannel: EventChannel? = null
+  private var deviceInfoSink : EventChannel.EventSink? = null
+  private val deviceInfoHandler = object : EventChannel.StreamHandler {
     override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
-      devicePowerSink = eventSink
+      deviceInfoSink = eventSink
     }
     override fun onCancel(o: Any?) {}
   }
@@ -113,28 +123,23 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     override fun onCancel(o: Any?) {}
   }
 
-  private var deviceFirmwareVersionChannel: EventChannel? = null
-  private var deviceFirmwareVersionSink : EventChannel.EventSink? = null
-  private val deviceFirmwareVersionHandler = object : EventChannel.StreamHandler {
-    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
-      deviceFirmwareVersionSink = eventSink
-    }
-    override fun onCancel(o: Any?) {}
-  }
-
   private val mDevices = mutableListOf<Map<String, Any>>()
   private val mABDevices  = mutableListOf<ABDevice>()
+
+  private fun deviceMap(value:ABDevice):MutableMap<String, Any> {
+    val item: MutableMap<String, Any> = HashMap()
+    item["deviceName"] = value.bleName
+    item["deviceMacAddress"] = value.address
+    item["deviceBleAddress"] = value.bleAddress
+    item["rssi"] = value.rssi
+    return item
+  }
 
   private fun initScanner() {
     mScannerRepository.scannerResults.observeForever{ data ->
       data.devices.forEach { value ->
-        val item: MutableMap<String, Any> = HashMap()
-        item["deviceName"] = value.bleName
-        item["deviceMacAddress"] = value.address
-        item["deviceBleAddress"] = value.bleAddress
-        item["rssi"] = value.rssi
-       // item["abDevice"] = gson.toJson(value)
-       // Timber.tag("scannerResults").d(item.toString())
+        val item: MutableMap<String, Any> = deviceMap(value)
+
         val existingIndex =  mDevices.indexOfFirst { (it as? Map<String, Any>)?.get("deviceMacAddress") == item["deviceMacAddress"] }
 
         if(existingIndex != -1){
@@ -147,20 +152,12 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
         mDevices.sortWith(compareByDescending { (it as? Map<String, Any>)?.get("rssi") as? Int ?: -100 })
       }
       mDeviceRepository
-//      Timber.tag("mDevices").d(mDevices.toString())
-      //         Handler(Looper.getMainLooper()).post {
       scannerResultSink?.success(mDevices)
-//          }
     }
 
     mScannerRepository.scannerState.observeForever{ liveData ->
       Log.d("scannerState", liveData.toString())
-      val item: MutableMap<String, Any> = HashMap()
-      item["isEmpty"] = liveData.isEmpty
-      item["isBluetoothEnabled"] = liveData.isBluetoothEnabled
-      item["isScanning"] = liveData.isScanning
-      item["isLocationEnabled"] = liveData.isLocationEnabled
-      scannerStateSink?.success(item)
+      scannerStateSink?.success(gson.toJson(liveData))
     }
   }
 
@@ -168,6 +165,13 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     // Observe scannerViewModel livedata
     mDeviceRepository.deviceConnectionState.observeForever { state ->
       Log.d("deviceConnectionState","$state")
+//      val DEVICE_CONNECTION_STATE_IDLE = 0
+//      val DEVICE_CONNECTION_STATE_PAIRING = 1
+//      val DEVICE_CONNECTION_STATE_PAIRED = 2
+//      val DEVICE_CONNECTION_STATE_CONNECTING = 3
+//      val DEVICE_CONNECTION_STATE_CONNECTED = 4
+//      val DEVICE_CONNECTION_STATE_AUTHENTICATING = 5
+//      val DEVICE_CONNECTION_STATE_AUTHENTICATED = 6
       deviceConnectionStateSink?.success(state)
       when (state) {
         DeviceRepository.DEVICE_CONNECTION_STATE_IDLE -> {
@@ -183,46 +187,21 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     mDeviceRepository.popupDevice.observeForever { device ->
       // handle popup device
       Log.d("popupDevice","$device")
-      val item: MutableMap<String, Any> = HashMap()
-      item["deviceName"] = device.bleName
-      item["deviceMacAddress"] = device.address
-      item["deviceBleAddress"] = device.bleAddress
-      item["rssi"] = device.rssi
+      val item: MutableMap<String, Any> = deviceMap(device)
       popupDeviceSink?.success(item)
     }
 
     mDeviceRepository.activeDevice.observeForever { device ->
       // handle active device
       Log.d("activeDevice","$device")
-      val item: MutableMap<String, Any> = HashMap()
-      item["deviceName"] = device.bleName
-      item["deviceMacAddress"] = device.address
-      item["deviceBleAddress"] = device.bleAddress
-      item["rssi"] = device.rssi
+      val item: MutableMap<String, Any> = deviceMap(device)
       activeDeviceSink?.success(item)
     }
-
-    mDeviceRepository.devicePower.observeForever { power ->
-      // handle power
-      Log.d("devicePower","$power")
-      val item: MutableMap<String, Any?> = HashMap()
-      item["casePower"] = power.casePower
-      item["leftSidePower"] = power.leftSidePower
-      item["rightSidePower"] = power.rightSidePower
-      devicePowerSink?.success(item)
-    }
-
-    // other observers
 
     mDeviceRepository.scanningState.observeForever { scanning ->
       // handle scanning state
       Log.d("scanningState","$scanning")
       scanningStateSink?.success(scanning)
-    }
-
-    mDeviceRepository.deviceFirmwareVersion.observeForever { value ->
-      Log.d("deviceFirmwareVersion","$value")
-      deviceFirmwareVersionSink?.success(value)
     }
   }
 
@@ -238,11 +217,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
   }
   private var gson = Gson()
   private fun bondDevice(device:String) {
-//    val authGson = GsonBuilder()
-//      .registerTypeAdapter(Authenticator::class.java, AuthenticatorDeserializer())
-//      .create()
-//    val device: ABDevice = authGson.fromJson(abDevice, ABEarbuds::class.java)
-    Log.d("abDevice","$device")
+    Log.d("abDevice", device)
     val type = object : TypeToken<HashMap<String, Any>>() {}.type
     val abDevice: ABDevice? = deviceFromFlutter(device = gson.fromJson(device,type), devices = mABDevices)
     if(abDevice!=null){
@@ -256,11 +231,47 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     mDeviceRepository.disconnect()
   }
 
-  private fun devicePower() {
-    Log.d("devicePower","devicePower")
-    mDeviceRepository.deviceCommManager.sendRequest(DeviceInfoRequest(Command.INFO_DEVICE_POWER))
+  private fun deviceInfo() {
+    Log.d("sendRequest","deviceInfo")
+    mDeviceRepository.deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest())
+    getLiveData()
   }
-  
+
+  private fun getLiveData() {
+    Log.d("deviceInfo","sendRequest")
+    mDeviceRepository.deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest())
+    val deviceInfo = DeviceInfoModel(
+      devicePower = mDeviceRepository.devicePower.value,
+      deviceName = mDeviceRepository.deviceName.value,
+      deviceFirmwareVersion = mDeviceRepository.deviceFirmwareVersion.value,
+      deviceEqSetting = mDeviceRepository.deviceEqSetting.value,
+      deviceKeySettings = mDeviceRepository.deviceKeySettings.value,
+      deviceVolume = mDeviceRepository.deviceVolume.value,
+      DevicePlayState = mDeviceRepository.devicePlayState.value,
+      DeviceWorkMode = mDeviceRepository.deviceWorkMode.value,
+      deviceInEarStatus = mDeviceRepository.deviceInEarStatus.value,
+      deviceLanguageSetting = mDeviceRepository.deviceLanguageSetting.value,
+      deviceAutoAnswer = mDeviceRepository.deviceAutoAnswer.value,
+      deviceAncMode = mDeviceRepository.deviceAncMode.value,
+      deviceIsTws = mDeviceRepository.deviceIsTws.value,
+      deviceTwsConnected = mDeviceRepository.deviceTwsConnected.value,
+      deviceLedSwitch = mDeviceRepository.deviceLedSwitch.value,
+      deviceFwChecksum = mDeviceRepository.deviceFwChecksum.value,
+      deviceAncGain = mDeviceRepository.deviceAncGain.value,
+      deviceTransparencyGain = mDeviceRepository.deviceTransparencyGain.value,
+      deviceAncGainNum = mDeviceRepository.deviceAncGainNum.value,
+      deviceTransparencyGainNum = mDeviceRepository.deviceTransparencyGainNum.value,
+      deviceRemoteEqSettings = mDeviceRepository.deviceRemoteEqSettings.value,
+      deviceLeftIsMainSide = mDeviceRepository.deviceLeftIsMainSide.value,
+      deviceProductColor = mDeviceRepository.deviceProductColor.value,
+      deviceSoundEffect3d = mDeviceRepository.deviceSoundEffect3d.value,
+      deviceCapacities = mDeviceRepository.deviceCapacities.value,
+      deviceMaxPacketSize = mDeviceRepository.deviceMaxPacketSize.value
+    )
+    Log.d("getLiveData",gson.toJson(deviceInfo))
+    deviceInfoSink?.success(gson.toJson(deviceInfo))
+  }
+
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "jete_tws_sdk")
@@ -282,15 +293,11 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     activeDeviceChannel = EventChannel(flutterPluginBinding.binaryMessenger, "activeDevice")
     activeDeviceChannel!!.setStreamHandler(activeDeviceHandler)
 
-    devicePowerChannel = EventChannel(flutterPluginBinding.binaryMessenger, "devicePower")
-    devicePowerChannel!!.setStreamHandler(devicePowerHandler)
+    deviceInfoChannel = EventChannel(flutterPluginBinding.binaryMessenger, "devicePower")
+    deviceInfoChannel!!.setStreamHandler(deviceInfoHandler)
 
     scanningStateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "scanningState")
     scanningStateChannel!!.setStreamHandler(scanningStateHandler)
-
-    deviceFirmwareVersionChannel = EventChannel(flutterPluginBinding.binaryMessenger, "deviceFirmwareVersion")
-    deviceFirmwareVersionChannel!!.setStreamHandler(deviceFirmwareVersionHandler)
-
 
   }
 
@@ -305,8 +312,95 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
         }
       }
       "disconnect"  -> disconnect()
-      "devicePower"  -> devicePower()
+      "deviceInfo"  -> deviceInfo()
+      "sendRequest" ->{
+        val strRequest: String? = call.argument<String>("strRequest")
+        val gain: Byte? = call.argument<Byte>("gain")
+        val mode: Byte? = call.argument<Byte>("mode")
+        val enable: Boolean? = call.argument<Boolean>("enable")
+        val bluetoothName: String? = call.argument<String>("bluetoothName")
+        val setting: Byte? = call.argument<Byte>("setting")
+        val eqmode: Byte? = call.argument<Byte>("eqmode")
+        val language: Byte? = call.argument<Byte>("language")
+        val eqgain: Byte? = call.argument<Byte>("eqgain")
+        val isCustom: Boolean? = call.argument<Boolean>("isCustom")
+        val keyType: Byte? = call.argument<Byte>("keyType")
+        val keyFunction: Byte? = call.argument<Byte>("keyFunction")
+        val controlType: Byte? = call.argument<Byte>("controlType")
+        var request: Request? = null
+        when (strRequest){
+          "AncGainRequest" -> {
+            request = gain?.let { AncGainRequest(it) }
+          }
+          "AncModeRequest" -> {
+            request = mode?.let { AncModeRequest(it) }
+          }
+          "AutoAnswerRequest" -> {
+            request = enable?.let { AutoAnswerRequest(it) }
+          }
+          "AutoShutdownRequest" -> {
+            request = setting?.let { AutoShutdownRequest(it) }
+          }
+          "BluetoothNameRequest" -> {
+            request = BluetoothNameRequest(bluetoothName)
+          }
+          "ClearPairRecordRequest" -> {
+            request = ClearPairRecordRequest()
+          }
+          "EqRequest" -> {
+              request = eqmode?.let {
+                if(isCustom==true) {
+                  EqRequest.CustomEqRequest(it, eqgain!!)
+                }else{
+                  EqRequest.PresetEqRequest(it, eqgain!!)
+                }
+              }
+          }
+          "FactoryResetRequest" -> {
+            request = FactoryResetRequest()
+          }
+          "FindDeviceRequest" -> {
+            request = enable?.let { FindDeviceRequest(it) }
+          }
+          "InEarDetectRequest" -> {
+            request = enable?.let { InEarDetectRequest(it) }
+          }
+          "KeyRequest" -> {
+            request = keyType?.let {
+              if (keyFunction != null) {
+                KeyRequest(it,keyFunction)
+              }else{
+                null
+              }
+            }
+          }
+          "LanguageRequest" -> {
+            request = language?.let { LanguageRequest(it) }
+          }
+          "LedSwitchRequest" -> {
+            request = enable?.let { LedSwitchRequest(it) }
+          }
+          "MusicControlRequest" -> {
+            request = controlType?.let { MusicControlRequest(it) }
+          }
+          "SoundEffect3dRequest" -> {
+            request = enable?.let { SoundEffect3dRequest(it) }
+          }
+          "TransparencyGainRequest" -> {
+            request = gain?.let {TransparencyGainRequest(it) }
+          }
+          "WorkModeRequest" -> {
+            request = mode?.let { WorkModeRequest(it) }
+          }
+        }
+        if (request != null) {
+          mDeviceRepository.deviceCommManager.sendRequest(request)
+          Log.d("sendRequest",request.toString())
+          getLiveData()
+        }
+      }
       else -> result.notImplemented()
+
     }
   }
 
@@ -346,6 +440,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     mDefaultDeviceCommManager = DefaultDeviceCommManager()
     mScannerRepository = ScannerRepository(mActivity,mDeviceManagerApi)
     mDeviceRepository = DeviceRepository(mActivity,mDeviceManagerApi,mDefaultDeviceCommManager)
+    mDeviceRepository.registerBroadcastReceivers()
     initScanner()
     initDevice()
   }
@@ -363,8 +458,6 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
   }
 
   private fun deviceFromFlutter(device: HashMap<String, Any?>, devices : List<ABDevice>):ABDevice? {
-//    item["deviceMacAddress"] = value.address
-//    item["deviceBleAddress"] = value.bleAddress
     if (devices.isEmpty()) {
       Timber.tag("deviceFromFlutter").d("devices list is empty")
       return null
@@ -377,37 +470,5 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
       }
     }
     return null
-  }
-}
-
-
-class AuthenticatorDeserializer : JsonDeserializer<Authenticator?> {
-  @Throws(JsonParseException::class)
-  override fun deserialize(
-    json: JsonElement,
-    typeOfT: Type,
-    context: JsonDeserializationContext
-  ): Authenticator? {
-    if (json.isJsonNull) {
-      // Handle null case if needed
-      return null
-    }
-    val jsonObject = json.asJsonObject
-    val implementationClassElement = jsonObject["implementationClass"]
-    if (implementationClassElement == null || implementationClassElement.isJsonNull) {
-      // Handle missing or null element
-      return null
-    }
-    val implementationClassName = implementationClassElement.asString
-    return try {
-      val implementationClass = Class.forName(implementationClassName)
-      implementationClass.newInstance() as Authenticator
-    } catch (e: ClassNotFoundException) {
-      throw JsonParseException("Error creating instance of Authenticator implementation", e)
-    } catch (e: IllegalAccessException) {
-      throw JsonParseException("Error creating instance of Authenticator implementation", e)
-    } catch (e: InstantiationException) {
-      throw JsonParseException("Error creating instance of Authenticator implementation", e)
-    }
   }
 }

@@ -3,7 +3,6 @@ package com.bluetrum.abmate.viewmodels;
 import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
-
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
@@ -13,7 +12,7 @@ public class SharedViewModel extends BaseViewModel {
 
     @Inject
     SharedViewModel(@NonNull DeviceRepository deviceRepository, @NonNull ScannerRepository scannerRepository) {
-        super(deviceRepository);
+       super(deviceRepository);
         this.mScannerRepository = scannerRepository;
         scannerRepository.registerBroadcastReceivers();
         deviceRepository.registerBroadcastReceivers();

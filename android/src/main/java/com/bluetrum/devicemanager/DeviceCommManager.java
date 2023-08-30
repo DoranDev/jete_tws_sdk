@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import timber.log.Timber;
+
 /**
  * 设备通信管理器
  * 负责发送请求和接收响应。发送请求时，如果请求过长，
@@ -257,7 +259,7 @@ public class DeviceCommManager {
     /* 处理通知 */
 
     protected void processNotification(byte command, byte[] data) {
-
+        Timber.tag("processNotification").d("notificationData");
         Class<? extends PayloadHandler<?>> callableCreator;
         Object resultCallback;
         synchronized (this) {
@@ -305,7 +307,7 @@ public class DeviceCommManager {
     private void onReceiveNotification(Notification notification) {
         byte notificationCommand = notification.getCommand();
         final byte[] notificationData = notification.getPayload();
-
+        Timber.tag("onReceiveNotification").d(notificationData.toString());
         // COMMAND_NOTIFY的格式属于TLV，单独处理
         if (notificationCommand == Command.COMMAND_NOTIFY) {
             processNotificationData(notificationData);

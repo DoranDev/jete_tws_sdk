@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:jete_tws_sdk/jete_tws_sdk.dart';
 
@@ -20,6 +18,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    tws.deviceInfoStream.listen((event) {
+      log(event.toString(), name: "deviceInfoStream");
+    });
     super.initState();
   }
 
@@ -49,6 +50,11 @@ class _MyAppState extends State<MyApp> {
               ),
               TextButton(
                   onPressed: tws.disconnect, child: const Text("disconnect")),
+              const Divider(
+                height: 16,
+              ),
+              TextButton(
+                  onPressed: tws.deviceInfo, child: const Text("deviceInfo")),
               const Divider(
                 height: 16,
               ),

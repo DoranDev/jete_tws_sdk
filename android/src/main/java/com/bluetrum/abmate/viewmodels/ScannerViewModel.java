@@ -3,13 +3,13 @@ package com.bluetrum.abmate.viewmodels;
 import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
-
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class ScannerViewModel extends BaseViewModel {
 
     private final ScannerRepository mScannerRepository;
+
 
     @Inject
     ScannerViewModel(@NonNull final DeviceRepository deviceRepository, @NonNull final ScannerRepository scannerRepository) {
