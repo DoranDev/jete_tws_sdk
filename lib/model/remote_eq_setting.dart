@@ -16,7 +16,7 @@ class RemoteEqSetting {
   factory RemoteEqSetting.fromJson(Map<String, dynamic> json) {
     return RemoteEqSetting(
       mode: json['mode'],
-      gains: json['gains'],
+      gains: List<int>.from(json['gains'] ?? []),
     );
   }
 }

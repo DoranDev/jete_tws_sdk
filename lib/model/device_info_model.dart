@@ -9,7 +9,7 @@ class DeviceInfo {
   final int? deviceFirmwareVersion;
   final String? deviceName;
   final RemoteEqSetting? deviceEqSetting;
-  final Map<int, int>? deviceKeySettings;
+  final Map<String, int>? deviceKeySettings;
   final int? deviceVolume;
   final bool? devicePlayState;
   final int? deviceWorkMode;
@@ -99,7 +99,7 @@ class DeviceInfo {
       deviceFirmwareVersion: json['deviceFirmwareVersion'],
       deviceName: json['deviceName'],
       deviceEqSetting: RemoteEqSetting.fromJson(json['deviceEqSetting']),
-      deviceKeySettings: Map<int, int>.from(json['deviceKeySettings']),
+      deviceKeySettings: Map<String, int>.from(json['deviceKeySettings'] ?? {}),
       deviceVolume: json['deviceVolume'],
       devicePlayState: json['DevicePlayState'],
       deviceWorkMode: json['DeviceWorkMode'],
@@ -110,14 +110,15 @@ class DeviceInfo {
       deviceIsTws: json['deviceIsTws'],
       deviceTwsConnected: json['deviceTwsConnected'],
       deviceLedSwitch: json['deviceLedSwitch'],
-      deviceFwChecksum: List<int>.from(json['deviceFwChecksum']),
+      deviceFwChecksum: List<int>.from(json['deviceFwChecksum'] ?? []),
       deviceAncGain: json['deviceAncGain'],
       deviceTransparencyGain: json['deviceTransparencyGain'],
       deviceAncGainNum: json['deviceAncGainNum'],
       deviceTransparencyGainNum: json['deviceTransparencyGainNum'],
       deviceRemoteEqSettings: List<RemoteEqSetting>.from(
           json['deviceRemoteEqSettings']
-              .map((x) => RemoteEqSetting.fromJson(x))),
+                  ?.map((x) => RemoteEqSetting.fromJson(x)) ??
+              []),
       deviceLeftIsMainSide: json['deviceLeftIsMainSide'],
       deviceProductColor: json['deviceProductColor'],
       deviceSoundEffect3d: json['deviceSoundEffect3d'],
