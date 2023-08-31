@@ -1,3 +1,7 @@
+## 1.0.4
+
+* string method channel salah
+
 ## 1.0.3
 
 * device info listener fix
