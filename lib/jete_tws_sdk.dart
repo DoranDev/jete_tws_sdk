@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/services.dart';
 import 'package:jete_tws_sdk/model/device_info_model.dart';
 part 'tws_anc_mode.dart';
@@ -83,11 +84,16 @@ class JeteTwsSdk {
       .cast();
 
   final EventChannel _deviceInfoChannel = const EventChannel('deviceInfo');
-  Stream<DeviceInfo> get deviceInfoStream => _deviceInfoChannel
+  Stream<DeviceInfo?> get deviceInfoStream => _deviceInfoChannel
           .receiveBroadcastStream(_deviceInfoChannel.name)
-          .map<DeviceInfo>((dynamic json) {
-        Map<String, dynamic> decodedJson = jsonDecode(json);
-        return DeviceInfo.fromJson(decodedJson);
+          .map<DeviceInfo?>((dynamic json) {
+        try {
+          Map<String, dynamic> decodedJson = jsonDecode(json);
+          return DeviceInfo.fromJson(decodedJson);
+        } catch (e) {
+          log(e.toString());
+          return null;
+        }
       });
 
   final EventChannel _scanningStateChannel =
