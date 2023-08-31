@@ -315,18 +315,18 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       "deviceInfo"  -> deviceInfo()
       "sendRequest" ->{
         val strRequest: String? = call.argument<String>("strRequest")
-        val gain: Byte? = call.argument<Byte>("gain")
-        val mode: Byte? = call.argument<Byte>("mode")
+        val gain: Byte? = call.argument<Int>("gain")?.toByte()
+        val mode: Byte? = call.argument<Int>("mode")?.toByte()
         val enable: Boolean? = call.argument<Boolean>("enable")
         val bluetoothName: String? = call.argument<String>("bluetoothName")
-        val setting: Byte? = call.argument<Byte>("setting")
-        val eqmode: Byte? = call.argument<Byte>("eqmode")
-        val language: Byte? = call.argument<Byte>("language")
-        val eqgain: Byte? = call.argument<Byte>("eqgain")
+        val setting: Byte? = call.argument<Int>("setting")?.toByte()
+        val eqmode: Byte? = call.argument<Int>("eqmode")?.toByte()
+        val language: Byte? = call.argument<Int>("language")?.toByte()
+        val eqgain: Byte? = call.argument<Int>("eqgain")?.toByte()
         val isCustom: Boolean? = call.argument<Boolean>("isCustom")
-        val keyType: Byte? = call.argument<Byte>("keyType")
-        val keyFunction: Byte? = call.argument<Byte>("keyFunction")
-        val controlType: Byte? = call.argument<Byte>("controlType")
+        val keyType: Byte? = call.argument<Int>("keyType")?.toByte()
+        val keyFunction: Byte? = call.argument<Int>("keyFunction")?.toByte()
+        val controlType: Byte? = call.argument<Int>("controlType")?.toByte()
         var request: Request? = null
         when (strRequest){
           "AncGainRequest" -> {
