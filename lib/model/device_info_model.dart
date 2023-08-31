@@ -95,10 +95,14 @@ class DeviceInfo {
 
   factory DeviceInfo.fromJson(Map<String, dynamic> json) {
     return DeviceInfo(
-      devicePower: DevicePower.fromJson(json['devicePower']),
+      devicePower: json['devicePower'] == null
+          ? null
+          : DevicePower.fromJson(json['devicePower']),
       deviceFirmwareVersion: json['deviceFirmwareVersion'],
       deviceName: json['deviceName'],
-      deviceEqSetting: RemoteEqSetting.fromJson(json['deviceEqSetting']),
+      deviceEqSetting: json['deviceEqSetting'] == null
+          ? null
+          : RemoteEqSetting.fromJson(json['deviceEqSetting']),
       deviceKeySettings: Map<String, int>.from(json['deviceKeySettings'] ?? {}),
       deviceVolume: json['deviceVolume'],
       devicePlayState: json['DevicePlayState'],
@@ -115,8 +119,9 @@ class DeviceInfo {
       deviceTransparencyGain: json['deviceTransparencyGain'],
       deviceAncGainNum: json['deviceAncGainNum'],
       deviceTransparencyGainNum: json['deviceTransparencyGainNum'],
-      deviceRemoteEqSettings: List<RemoteEqSetting>.from(
-          json['deviceRemoteEqSettings']
+      deviceRemoteEqSettings: json['deviceRemoteEqSettings'] == null
+          ? null
+          : List<RemoteEqSetting>.from(json['deviceRemoteEqSettings']
                   ?.map((x) => RemoteEqSetting.fromJson(x)) ??
               []),
       deviceLeftIsMainSide: json['deviceLeftIsMainSide'],
