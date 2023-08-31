@@ -20,41 +20,52 @@ class JeteTwsSdk {
   void stopScan() => methodChannel.invokeMethod('stopScan');
 
   void deviceInfo() => methodChannel.invokeMethod('deviceInfo');
-  void ancGainRequest(int gain) =>
-      methodChannel.invokeMethod('AncGainRequest', {'gain': gain});
-  void ancModeRequest(int mode) =>
-      methodChannel.invokeMethod('AncModeRequest', {'mode': mode});
-  void autoAnswerRequest(bool enable) =>
-      methodChannel.invokeMethod('AutoAnswerRequest', {'enable': enable});
-  void autoShutdownRequest(int setting) =>
-      methodChannel.invokeMethod('AutoShutdownRequest', {'setting': setting});
-  void bluetoothNameRequest(String bluetoothName) => methodChannel
-      .invokeMethod('BluetoothNameRequest', {'bluetoothName': bluetoothName});
-  void clearPairRecordRequest() =>
-      methodChannel.invokeMethod('ClearPairRecordRequest');
+  void ancGainRequest(int gain) => methodChannel.invokeMethod(
+      'sendRequest', {'strRequest': 'AncGainRequest', 'gain': gain});
+  void ancModeRequest(int mode) => methodChannel.invokeMethod(
+      'sendRequest', {'strRequest': 'AncModeRequest', 'mode': mode});
+  void autoAnswerRequest(bool enable) => methodChannel.invokeMethod(
+      'sendRequest', {'strRequest': 'AutoAnswerRequest', 'enable': enable});
+  void autoShutdownRequest(int setting) => methodChannel.invokeMethod(
+      'sendRequest', {'strRequest': 'AutoShutdownRequest', 'setting': setting});
+  void bluetoothNameRequest(String bluetoothName) => methodChannel.invokeMethod(
+      'sendRequest',
+      {'strRequest': 'BluetoothNameRequest', 'bluetoothName': bluetoothName});
+  void clearPairRecordRequest() => methodChannel.invokeMethod('sendRequest', {
+        'strRequest': 'ClearPairRecordRequest',
+      });
   void eqRequest(int eqmode, int eqgain, {bool isCustom = false}) =>
-      methodChannel.invokeMethod('EqRequest',
-          {'eqmode': eqmode, 'eqgain': eqgain, 'isCustom': isCustom});
-  void factoryResetRequest() =>
-      methodChannel.invokeMethod('FactoryResetRequest');
-  void findDeviceRequest(bool enable) =>
-      methodChannel.invokeMethod('FindDeviceRequest', {'enable': enable});
-  void inEarDetectRequest(bool enable) =>
-      methodChannel.invokeMethod('InEarDetectRequest', {'enable': enable});
-  void keyRequest(int keyType, int keyFunction) => methodChannel.invokeMethod(
-      'KeyRequest', {'keyType': keyType, 'keyFunction': keyFunction});
-  void languageRequest(int language) =>
-      methodChannel.invokeMethod('LanguageRequest', {'language': language});
-  void ledSwitchRequest(bool enable) =>
-      methodChannel.invokeMethod('LedSwitchRequest', {'enable': enable});
-  void musicControlRequest(int controlType) => methodChannel
-      .invokeMethod('MusicControlRequest', {'controlType': controlType});
-  void soundEffect3dRequest(bool enable) =>
-      methodChannel.invokeMethod('SoundEffect3dRequest', {'enable': enable});
-  void transparencyGainRequest(int gain) =>
-      methodChannel.invokeMethod('TransparencyGainRequest', {'gain': gain});
-  void workModeRequest(int mode) =>
-      methodChannel.invokeMethod('WorkModeRequest', {'mode': mode});
+      methodChannel.invokeMethod('sendRequest', {
+        'strRequest': 'EqRequest',
+        'eqmode': eqmode,
+        'eqgain': eqgain,
+        'isCustom': isCustom
+      });
+  void factoryResetRequest() => methodChannel
+      .invokeMethod('sendRequest', {'strRequest': 'FactoryResetRequest'});
+  void findDeviceRequest(bool enable) => methodChannel.invokeMethod(
+      'sendRequest', {'strRequest': 'FindDeviceRequest', 'enable': enable});
+  void inEarDetectRequest(bool enable) => methodChannel.invokeMethod(
+      'sendRequest', {'strRequest': 'InEarDetectRequest', 'enable': enable});
+  void keyRequest(int keyType, int keyFunction) =>
+      methodChannel.invokeMethod('sendRequest', {
+        'strRequest': 'KeyRequest',
+        'keyType': keyType,
+        'keyFunction': keyFunction
+      });
+  void languageRequest(int language) => methodChannel.invokeMethod(
+      'sendRequest', {'strRequest': 'LanguageRequest', 'language': language});
+  void ledSwitchRequest(bool enable) => methodChannel.invokeMethod(
+      'sendRequest', {'strRequest': 'LedSwitchRequest', 'enable': enable});
+  void musicControlRequest(int controlType) => methodChannel.invokeMethod(
+      'sendRequest',
+      {'strRequest': 'MusicControlRequest', 'controlType': controlType});
+  void soundEffect3dRequest(bool enable) => methodChannel.invokeMethod(
+      'sendRequest', {'strRequest': 'SoundEffect3dRequest', 'enable': enable});
+  void transparencyGainRequest(int gain) => methodChannel.invokeMethod(
+      'sendRequest', {'strRequest': 'TransparencyGainRequest', 'gain': gain});
+  void workModeRequest(int mode) => methodChannel.invokeMethod(
+      'sendRequest', {'strRequest': 'WorkModeRequest', 'mode': mode});
 
   final EventChannel _scannerResultChannel =
       const EventChannel('scannerResult');
