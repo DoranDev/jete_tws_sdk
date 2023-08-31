@@ -293,7 +293,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     activeDeviceChannel = EventChannel(flutterPluginBinding.binaryMessenger, "activeDevice")
     activeDeviceChannel!!.setStreamHandler(activeDeviceHandler)
 
-    deviceInfoChannel = EventChannel(flutterPluginBinding.binaryMessenger, "devicePower")
+    deviceInfoChannel = EventChannel(flutterPluginBinding.binaryMessenger, "deviceInfo")
     deviceInfoChannel!!.setStreamHandler(deviceInfoHandler)
 
     scanningStateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "scanningState")

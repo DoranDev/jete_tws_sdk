@@ -1,3 +1,7 @@
+## 1.0.2
+
+* device info listener fix
+
 ## 1.0.1
 
 * device info model in dart
