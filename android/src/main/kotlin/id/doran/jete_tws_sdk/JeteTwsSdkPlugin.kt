@@ -62,21 +62,21 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private var scannerResultChannel: EventChannel? = null
   private var scannerResultSink : EventChannel.EventSink? = null
   private val scannerResultHandler = object : EventChannel.StreamHandler {
-      override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
-        Timber.tag("scannerResultSink").d("onListen")
-        scannerResultSink = eventSink
-      }
-      override fun onCancel(o: Any?) {}
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      Timber.tag("scannerResultSink").d("onListen")
+      scannerResultSink = eventSink
     }
+    override fun onCancel(o: Any?) {}
+  }
 
   private var scannerStateChannel: EventChannel? = null
   private var scannerStateSink : EventChannel.EventSink? = null
   private val scannerStateHandler = object : EventChannel.StreamHandler {
-      override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
-        scannerStateSink = eventSink
-      }
-      override fun onCancel(o: Any?) {}
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      scannerStateSink = eventSink
     }
+    override fun onCancel(o: Any?) {}
+  }
 
   private var deviceConnectionStateChannel: EventChannel? = null
   private var deviceConnectionStateSink : EventChannel.EventSink? = null
@@ -234,12 +234,11 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private fun deviceInfo() {
     Log.d("sendRequest","deviceInfo")
     mDeviceRepository.deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest())
+    Thread.sleep(500)
     getLiveData()
   }
 
   private fun getLiveData() {
-    Log.d("deviceInfo","sendRequest")
-    mDeviceRepository.deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest())
     val deviceInfo = DeviceInfoModel(
       devicePower = mDeviceRepository.devicePower.value,
       deviceName = mDeviceRepository.deviceName.value,
@@ -348,13 +347,13 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             request = ClearPairRecordRequest()
           }
           "EqRequest" -> {
-              request = eqmode?.let {
-                if(isCustom==true) {
-                  EqRequest.CustomEqRequest(it, eqgain!!)
-                }else{
-                  EqRequest.PresetEqRequest(it, eqgain!!)
-                }
+            request = eqmode?.let {
+              if(isCustom==true) {
+                EqRequest.CustomEqRequest(it, eqgain!!)
+              }else{
+                EqRequest.PresetEqRequest(it, eqgain!!)
               }
+            }
           }
           "FactoryResetRequest" -> {
             request = FactoryResetRequest()
@@ -396,7 +395,6 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         if (request != null) {
           mDeviceRepository.deviceCommManager.sendRequest(request)
           Log.d("sendRequest",request.toString())
-          getLiveData()
         }
       }
       else -> result.notImplemented()
