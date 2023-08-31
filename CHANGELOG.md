@@ -1,3 +1,7 @@
+## 1.0.3
+
+* device info listener fix
+
 ## 1.0.2
 
 * device info listener fix
