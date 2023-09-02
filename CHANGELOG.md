@@ -1,3 +1,7 @@
+## 1.0.5
+
+* Equalizer error
+
 ## 1.0.4
 
 * string method channel salah

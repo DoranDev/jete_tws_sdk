@@ -34,7 +34,7 @@ class JeteTwsSdk {
   void clearPairRecordRequest() => methodChannel.invokeMethod('sendRequest', {
         'strRequest': 'ClearPairRecordRequest',
       });
-  void eqRequest(int eqmode, int eqgain, {bool isCustom = false}) =>
+  void eqRequest(int eqmode, List<int> eqgain, {bool isCustom = false}) =>
       methodChannel.invokeMethod('sendRequest', {
         'strRequest': 'EqRequest',
         'eqmode': eqmode,
