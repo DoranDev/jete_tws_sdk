@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import android.util.SparseArray
 import com.bluetrum.abmate.BuildConfig
 import com.bluetrum.abmate.utils.Utils
 import com.bluetrum.abmate.viewmodels.DefaultDeviceCommManager
@@ -321,7 +322,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         val setting: Byte? = call.argument<Int>("setting")?.toByte()
         val eqmode: Byte? = call.argument<Int>("eqmode")?.toByte()
         val language: Byte? = call.argument<Int>("language")?.toByte()
-        val eqgain: Byte? = call.argument<Int>("eqgain")?.toByte()
+        val eqGainList: List<Int>? = call.argument<List<Int>>("eqgain")
         val isCustom: Boolean? = call.argument<Boolean>("isCustom")
         val keyType: Byte? = call.argument<Int>("keyType")?.toByte()
         val keyFunction: Byte? = call.argument<Int>("keyFunction")?.toByte()
@@ -347,11 +348,12 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             request = ClearPairRecordRequest()
           }
           "EqRequest" -> {
+            val eqGainsByteArray = eqGainList!!.map { it.toByte() }.toByteArray()
             request = eqmode?.let {
               if(isCustom==true) {
-                EqRequest.CustomEqRequest(it, eqgain!!)
+                EqRequest.CustomEqRequest(it, *eqGainsByteArray)
               }else{
-                EqRequest.PresetEqRequest(it, eqgain!!)
+                EqRequest.PresetEqRequest(it, *eqGainsByteArray)
               }
             }
           }
