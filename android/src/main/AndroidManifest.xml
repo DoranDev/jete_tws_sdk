@@ -3,8 +3,8 @@
   xmlns:tools="http://schemas.android.com/tools">
     <!-- ！！！OTA选择文件测试用，不要在正式发布软件使用！！！ -->
     <!-- !!! Select FOT file for testing OTA, DO NOT use in release version -->
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
+<!--    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"-->
+<!--        tools:ignore="ScopedStorage" />-->
 
     <uses-feature android:name="android.hardware.bluetooth" android:required="true" />
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
