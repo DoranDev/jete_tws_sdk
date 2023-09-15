@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
-part of 'jete_tws_sdk.dart';
+part of '../jete_tws_sdk.dart';
 
 abstract class TwsAncMode {
   static const int ANC_MODE_OFF = 0x00;

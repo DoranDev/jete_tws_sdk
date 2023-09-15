@@ -3,9 +3,9 @@ package id.doran.jete_tws_sdk
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.util.Log
-import android.util.SparseArray
 import com.bluetrum.abmate.BuildConfig
 import com.bluetrum.abmate.utils.Utils
 import com.bluetrum.abmate.viewmodels.DefaultDeviceCommManager
@@ -226,6 +226,19 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     }
   }
 
+  private fun headsetIsConnected(deviceAddress:String):Boolean {
+    Log.d("headsetIsConnected", deviceAddress)
+
+    val bluetoothManager = mContext.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+    val bluetoothAdapter = bluetoothManager.adapter
+      ?:return false
+
+    val blueDevice = bluetoothAdapter.getRemoteDevice(deviceAddress)
+
+    return mDeviceRepository.headsetIsConnected(blueDevice)
+  }
+
+
 
   private fun disconnect() {
     Log.d("disconnect","disconnect")
@@ -313,6 +326,13 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       }
       "disconnect"  -> disconnect()
       "deviceInfo"  -> deviceInfo()
+      "headsetIsConnected"  -> {
+        val bmac: String? = call.argument<String>("bmac")
+        if (bmac != null) {
+          val isConnected: Boolean = headsetIsConnected(bmac)
+          result.success(isConnected)
+        }
+      }
       "sendRequest" ->{
         val strRequest: String? = call.argument<String>("strRequest")
         val gain: Byte? = call.argument<Int>("gain")?.toByte()
