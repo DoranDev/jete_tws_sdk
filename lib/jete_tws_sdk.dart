@@ -15,8 +15,8 @@ class JeteTwsSdk {
 
   void bondDevice({required device}) =>
       methodChannel.invokeMethod('bondDevice', {'bmac': jsonEncode(device)});
-  Future headsetIsConnected({required device}) => methodChannel
-      .invokeMethod('headsetIsConnected', {'bmac': jsonEncode(device)});
+  Future headsetIsConnected({required address}) =>
+      methodChannel.invokeMethod('headsetIsConnected', {'bmac': address});
   void disconnect() => methodChannel.invokeMethod('disconnect');
   void startScan() => methodChannel.invokeMethod('startScan');
   void stopScan() => methodChannel.invokeMethod('stopScan');
