@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - jete_tws_sdk (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - jete_tws_sdk (from `.symlinks/plugins/jete_tws_sdk/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  jete_tws_sdk:
+    :path: ".symlinks/plugins/jete_tws_sdk/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  jete_tws_sdk: 4fd833d9f49baa158184f5b07f0fa47368bc37e5
+
+PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
+
+COCOAPODS: 1.12.1
