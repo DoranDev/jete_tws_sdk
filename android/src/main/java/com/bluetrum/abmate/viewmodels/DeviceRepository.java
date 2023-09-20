@@ -242,7 +242,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
                 stopScan();
             }
             // 处理之后，屏蔽此设备，相当于只取第一次检测到已连接的情况
-            mTempBlocklist.add(device.getAddress());
+           // mTempBlocklist.add(device.getAddress());
 
             deviceConnectionState.setValue(DEVICE_CONNECTION_STATE_PAIRING);
             mPreparingDevice.setValue(device);
@@ -615,7 +615,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
 
     public void addDeviceToBlocklist(String deviceAddress, long blockTime) {
         if (blockTime == BLOCK_TIME_TEMP) {
-            mTempBlocklist.add(deviceAddress);
+          //  mTempBlocklist.add(deviceAddress);
         } else if (blockTime == BLOCK_TIME_FOREVER) {
             mDeviceManagerApi.insertBlockRecord(deviceAddress, blockTime);
         } else {
@@ -702,7 +702,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
             // Connect to device is active
             bondDevice(device);
             // 处理之后，屏蔽此设备，相当于只取第一次检测到已连接的情况
-            mTempBlocklist.add(device.getAddress());
+           // mTempBlocklist.add(device.getAddress());
             return;
         }
 
