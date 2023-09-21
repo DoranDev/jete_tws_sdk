@@ -132,6 +132,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     item["deviceName"] = value.bleName
     item["deviceMacAddress"] = value.address
     item["deviceBleAddress"] = value.bleAddress
+    item["abDevice"] = value
     item["rssi"] = value.rssi
     return item
   }
@@ -225,6 +226,12 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       mDeviceRepository.bondDevice(abDevice)
     }
   }
+
+  private fun connect(abDevice: ABDevice) {
+    Log.d("abDevice", abDevice.toString())
+    mDeviceRepository.bondDevice(abDevice)
+  }
+
 
   private fun headsetIsConnected(deviceAddress:String):Boolean {
     Log.d("headsetIsConnected", deviceAddress)
@@ -322,6 +329,12 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         val bmac: String? = call.argument<String>("bmac")
         if (bmac != null) {
           bondDevice(bmac)
+        }
+      }
+      "connect"  -> {
+        val abDev: ABDevice? = call.argument<Object>("abDevice") as ABDevice?
+        if (abDev != null) {
+          connect(abDev)
         }
       }
       "disconnect"  -> disconnect()
