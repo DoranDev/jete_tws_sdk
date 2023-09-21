@@ -692,34 +692,34 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
         final String deviceAddress = device.getAddress();
       //  Log.d("handleEarbudsFound",deviceAddress);
         // Check if it's the device disconnected by user last time
-        if (deviceAddress.equals(deviceAddressDisconnectedByUser)) {
-            return;
-        }
+//        if (deviceAddress.equals(deviceAddressDisconnectedByUser)) {
+//            return;
+//        }
 
-        if (headsetIsConnected(device.getDevice())) {
-            // 停止扫描
-            stopScan();
-            // Connect to device is active
-            bondDevice(device);
-            // 处理之后，屏蔽此设备，相当于只取第一次检测到已连接的情况
-           // mTempBlocklist.add(device.getAddress());
-            return;
-        }
+//        if (headsetIsConnected(device.getDevice())) {
+//            // 停止扫描
+//            stopScan();
+//            // Connect to device is active
+//            bondDevice(device);
+//            // 处理之后，屏蔽此设备，相当于只取第一次检测到已连接的情况
+//           // mTempBlocklist.add(device.getAddress());
+//            return;
+//        }
 
         // If device indicates it's connected
-        if (device.isConnected()) {
-            Timber.w("handleEarbudsFound: Can't be here");
-            return;
-        }
+//        if (device.isConnected()) {
+//            Timber.w("handleEarbudsFound: Can't be here");
+//            return;
+//        }
 
         Date now = Calendar.getInstance().getTime();
         // 更新扫描到的设备的时间戳
         updateTimestamp(deviceAddress, now);
 
         // Check if device is still blocked
-        if (isDeviceStillBlocked(deviceAddress)) {
-            return;
-        }
+//        if (isDeviceStillBlocked(deviceAddress)) {
+//            return;
+//        }
 
         // 是否当前正在弹窗的设备
         if (isPopupDevice(device.getDevice())) {
