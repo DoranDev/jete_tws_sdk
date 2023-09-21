@@ -324,7 +324,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
         // 更新设备连接状态
         deviceConnectionState.postValue(DEVICE_CONNECTION_STATE_IDLE);
 
-        startScanIfMeetConditions();
+      //  startScanIfMeetConditions();
     }
 
     private void startScanIfMeetConditions() {
