@@ -46,7 +46,7 @@ public class ScannerRepository {
 
         @Override
         public void onScanResult(final int callbackType, @NonNull final ScanResult result) {
-//            Timber.tag(TAG).v("scan result = %s", result);
+            Timber.tag(TAG).v("scan result = %s", result);
             try {
                 final ScanRecord scanRecord = result.getScanRecord();
                 // 过滤beacon，符合条件的才会添加到列表
