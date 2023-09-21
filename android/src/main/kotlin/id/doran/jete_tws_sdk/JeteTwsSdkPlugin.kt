@@ -426,6 +426,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
   override fun onDetachedFromEngine( binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
+    mDeviceRepository.unregisterBroadcastReceivers()
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
