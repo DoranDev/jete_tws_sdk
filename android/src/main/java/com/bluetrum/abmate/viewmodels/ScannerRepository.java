@@ -170,9 +170,9 @@ public class ScannerRepository {
      * Start scanning for Bluetooth devices.
      */
     public void startScan() {
-        if (mScannerStateLiveData.isScanning()) {
-            return;
-        }
+//        if (mScannerStateLiveData.isScanning()) {
+//            return;
+//        }
         mScannerStateLiveData.scanningStarted();
         Timber.tag("startScan").d("scanningStarted");
         BleScanManager.startScan(null, mScanCallbacks);
@@ -182,9 +182,9 @@ public class ScannerRepository {
      * stop scanning for bluetooth devices.
      */
     public void stopScan() {
-        if (!mScannerStateLiveData.isScanning()) {
-            return;
-        }
+//        if (!mScannerStateLiveData.isScanning()) {
+//            return;
+//        }
 
         BleScanManager.stopScan(mScanCallbacks);
 
