@@ -174,35 +174,41 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 //      val DEVICE_CONNECTION_STATE_AUTHENTICATING = 5
 //      val DEVICE_CONNECTION_STATE_AUTHENTICATED = 6
       deviceConnectionStateSink?.success(state)
-      when (state) {
-        DeviceRepository.DEVICE_CONNECTION_STATE_IDLE -> {
-          // handle idle state
-        }
-        DeviceRepository.DEVICE_CONNECTION_STATE_PAIRING -> {
-          // handle pairing state
-        }
-        // other states
-      }
+//      when (state) {
+//        DeviceRepository.DEVICE_CONNECTION_STATE_IDLE -> {
+//          // handle idle state
+//        }
+//        DeviceRepository.DEVICE_CONNECTION_STATE_PAIRING -> {
+//          // handle pairing state
+//        }
+//        // other states
+//      }
     }
 
     mDeviceRepository.popupDevice.observeForever { device ->
       // handle popup device
       Log.d("popupDevice","$device")
-      val item: MutableMap<String, Any> = deviceMap(device)
-      popupDeviceSink?.success(item)
+      if(device!=null) {
+        val item: MutableMap<String, Any> = deviceMap(device)
+        popupDeviceSink?.success(item)
+      }
     }
 
     mDeviceRepository.activeDevice.observeForever { device ->
       // handle active device
       Log.d("activeDevice","$device")
-      val item: MutableMap<String, Any> = deviceMap(device)
-      activeDeviceSink?.success(item)
+      if(device!=null) {
+        val item: MutableMap<String, Any> = deviceMap(device)
+        activeDeviceSink?.success(item)
+      }
     }
 
     mDeviceRepository.scanningState.observeForever { scanning ->
       // handle scanning state
-      Log.d("scanningState","$scanning")
-      scanningStateSink?.success(scanning)
+      if(device!=null) {
+        Log.d("scanningState", "$scanning")
+        scanningStateSink?.success(scanning)
+      }
     }
   }
 

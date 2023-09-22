@@ -420,7 +420,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
                         mPopupDevice.setValue(null);
                         mTempBlocklist.remove(device.getAddress());
                         // 如果符合条件，则开始扫描
-                        startScanIfMeetConditions();
+//                        startScanIfMeetConditions();
                     } else if (previousState == BluetoothDevice.BOND_BONDED && currentState == BluetoothDevice.BOND_BONDING) {
                         // 重新配对
                         deviceConnectionState.setValue(DEVICE_CONNECTION_STATE_PAIRING);
