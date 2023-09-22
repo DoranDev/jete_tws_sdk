@@ -205,7 +205,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     mDeviceRepository.scanningState.observeForever { scanning ->
       // handle scanning state
-      if(device!=null) {
+      if(scanning!=null) {
         Log.d("scanningState", "$scanning")
         scanningStateSink?.success(scanning)
       }
