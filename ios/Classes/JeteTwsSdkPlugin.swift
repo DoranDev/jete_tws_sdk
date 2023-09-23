@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import RxSwift
 
 public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -36,11 +37,11 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
     
     private var channel: FlutterMethodChannel?
-    private var mContext: FlutterPluginRegistrar?
-    private var mActivity: UIViewController?
-    private var mDefaultDeviceCommManager: DefaultDeviceCommManager?
-    private var mDeviceManagerApi: DeviceManagerApi?
-    private var mDeviceRepository: DeviceRepository?
+    // private var mContext: FlutterPluginRegistrar?
+    // private var mActivity: UIViewController?
+    // private var mDefaultDeviceCommManager: DefaultDeviceCommManager?
+    // private var mDeviceManagerApi: DeviceManagerApi?
+    private var mDeviceRepository: DeviceRepository = DeviceRepository.shared
     
     static let eventChannelNameScannerResult = "scannerResult";
     static let eventChannelNameScannerState = "scannerState";
@@ -60,11 +61,53 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     
     private var mDevices = [Dictionary<String, Any>]()
     private var mABDevices = [ABDevice]()
+    private let disposeBag = DisposeBag()
     
+    
+    private func deviceMap(_ value: ABDevice) -> [String: Any] {
+        var item: [String: Any] = [:]
+        item["deviceName"] = value.name
+        item["deviceMacAddress"] = value.peripheral.identifier.uuidString
+        item["deviceBleAddress"] = value.peripheral.identifier.uuidString
+        item["rssi"] = value.rssi
+        return item
+    }
+
+    
+    private func initDevice() {
+        mDeviceRepository.latestDiscoveredDevice.subscribeOnNext { [weak self] device in
+            if let value = device {
+                let item = self?.deviceMap(value)
+
+                if let existingIndex = self?.mDevices.firstIndex(where: { ($0 as [String: Any])["deviceMacAddress"] as? String == item?["deviceMacAddress"] as? String }) {
+                    self?.mDevices[existingIndex] = item!
+                } else {
+                    self?.mABDevices.append(value)
+                    self?.mDevices.append(item ?? [:])
+                }
+
+                self?.mDevices.sort { (dict1, dict2) -> Bool in
+                    let rssi1 = (dict1 as [String: Any])["rssi"] as? Int ?? -100
+                    let rssi2 = (dict2 as [String: Any])["rssi"] as? Int ?? -100
+                    return rssi1 > rssi2
+                }
+            }
+            self?.scannerResultSink?(self?.mDevices ?? [])
+        }.disposed(by: disposeBag)
+        
+        mDeviceRepository.activeDevice.subscribeOnNext { [weak self] device in
+            if(device != nil){
+                let item = self?.deviceMap(device!)
+                self?.activeDeviceSink?(item)
+            }
+        }.disposed(by: disposeBag)
+    }
+
+
     
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "jete_tws_sdk", binaryMessenger: registrar.messenger())
-    let instance = JeteTwsSdkPlugin()
+    let instance = JeteTwsSdkPlugin(channel)
     registrar.addMethodCallDelegate(instance, channel: channel)
       let scannerResultChannel = FlutterEventChannel(name: eventChannelNameScannerResult, binaryMessenger:registrar.messenger())
       scannerResultChannel.setStreamHandler(instance)
@@ -81,6 +124,11 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
       let scanningStateChannel = FlutterEventChannel(name: eventChannelNameScanningState, binaryMessenger:registrar.messenger())
       scanningStateChannel.setStreamHandler(instance)
   }
+    
+    init (_ channel: FlutterMethodChannel) {
+        super.init()
+        initDevice()
+   }
     
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -177,7 +225,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
                   }
                   
                   if let request = request {
-                      mDeviceRepository?.deviceCommManager.sendRequest(request)
+                      mDeviceRepository.deviceCommManager.sendRequest(request)
                       print("sendRequest", request)
                   }
               } else {
@@ -192,28 +240,27 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     private func startScan() {
         print("startScan")
         mDevices.removeAll()
-        mDeviceRepository?.startScanning()
+        mDeviceRepository.startScanning()
     }
     
     private func stopScan() {
         print("stopScan")
-        mDeviceRepository?.stopScanning()
+        mDeviceRepository.stopScanning()
     }
 
     private func disconnect() {
         print("disconnect")
-        mDeviceRepository?.disconnect()
+        mDeviceRepository.disconnect()
     }
     
 
 
     private func bondDevice(device: String) {
         print("abDevice", device)
-        let type = [String: Any].self
         if let dictionary = try? JSONSerialization.jsonObject(with: device.data(using: .utf8)!, options: []) as? [String: Any] {
             let abDevice = deviceFromFlutter(device: dictionary, devices: mABDevices)
             if let abDevice = abDevice {
-                mDeviceRepository?.connect(abDevice)
+                mDeviceRepository.connect(abDevice)
             }
         }
     }
@@ -236,7 +283,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     private func deviceInfo() {
         print("sendRequest", "deviceInfo")
-        mDeviceRepository?.deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest)
+        mDeviceRepository.deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest)
         
         // Sleep for 500 milliseconds (0.5 seconds)
         Thread.sleep(forTimeInterval: 0.5)
@@ -245,13 +292,8 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
     
     private func getLiveData() {
-        guard let deviceRepository = mDeviceRepository else {
-            print("mDeviceRepository is nil")
-            return
-        }
-        
         var devicePower = [String: Any]()
-        var mdevicePower = deviceRepository.devicePower.value
+        let mdevicePower = mDeviceRepository.devicePower.value
         devicePower["leftSidePower"] = [
             "isCharging": mdevicePower?.leftSidePower?.isCharging ?? false,
             "powerLevel": mdevicePower?.leftSidePower?.powerLevel ?? 0
@@ -268,12 +310,12 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         ] as [String : Any]
 
         var deviceEqSetting = [String: Any]()
-        var mdeviceEqSetting = deviceRepository.deviceEqSetting.value
+        let mdeviceEqSetting = mDeviceRepository.deviceEqSetting.value
         deviceEqSetting["mode"] = mdeviceEqSetting?.mode
         deviceEqSetting["gains"] = mdeviceEqSetting?.gains
         
         var deviceKeySettings = [[String: Any]()]
-        var mdeviceKeySettings = deviceRepository.deviceKeySettings.value
+        let mdeviceKeySettings = mDeviceRepository.deviceKeySettings.value
         mdeviceKeySettings?.forEach({ (key: KeyType, value: KeyFunction) in
             var deviceKeySetting = [String: Any]()
             deviceKeySetting[String(key.rawValue)] = value.rawValue
@@ -281,7 +323,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         })
         
         var deviceRemoteEqSettings = [[String: Any]()]
-        var mdeviceRemoteEqSettings = deviceRepository.deviceRemoteEqSettings.value
+        let mdeviceRemoteEqSettings = mDeviceRepository.deviceRemoteEqSettings.value
         mdeviceRemoteEqSettings?.forEach({ RemoteEqSetting in
             var deviceEqSetting = [String: Any]()
             deviceEqSetting["mode"] = RemoteEqSetting.mode
@@ -291,31 +333,31 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
 
         let deviceInfo = DeviceInfoModel(
             devicePower: devicePower,
-            deviceFirmwareVersion: deviceRepository.deviceFirmwareVersion.value,
-            deviceName: deviceRepository.deviceName.value,
+            deviceFirmwareVersion: mDeviceRepository.deviceFirmwareVersion.value,
+            deviceName: mDeviceRepository.deviceName.value,
             deviceEqSetting: deviceEqSetting,
             deviceKeySettings: deviceKeySettings,
-            deviceVolume: deviceRepository.deviceVolume.value,
-            devicePlayState: deviceRepository.devicePlayState.value,
-            deviceWorkMode: deviceRepository.deviceWorkMode.value,
-            deviceInEarStatus: deviceRepository.deviceInEarStatus.value,
-            deviceLanguageSetting: deviceRepository.deviceLanguageSetting.value,
-            deviceAutoAnswer: deviceRepository.deviceAutoAnswer.value,
-            deviceAncMode: deviceRepository.deviceAncMode.value,
-            deviceIsTws: deviceRepository.deviceIsTws.value,
-            deviceTwsConnected: deviceRepository.deviceTwsConnected.value,
-            deviceLedSwitch: deviceRepository.deviceLedSwitch.value,
-            deviceFwChecksum: deviceRepository.deviceFwChecksum.value,
-            deviceAncGain: deviceRepository.deviceAncGain.value,
-            deviceTransparencyGain: deviceRepository.deviceTransparencyGain.value,
-            deviceAncGainNum: deviceRepository.deviceAncGainNum.value,
-            deviceTransparencyGainNum: deviceRepository.deviceTransparencyGainNum.value,
+            deviceVolume: mDeviceRepository.deviceVolume.value,
+            devicePlayState: mDeviceRepository.devicePlayState.value,
+            deviceWorkMode: mDeviceRepository.deviceWorkMode.value,
+            deviceInEarStatus: mDeviceRepository.deviceInEarStatus.value,
+            deviceLanguageSetting: mDeviceRepository.deviceLanguageSetting.value,
+            deviceAutoAnswer: mDeviceRepository.deviceAutoAnswer.value,
+            deviceAncMode: mDeviceRepository.deviceAncMode.value,
+            deviceIsTws: mDeviceRepository.deviceIsTws.value,
+            deviceTwsConnected: mDeviceRepository.deviceTwsConnected.value,
+            deviceLedSwitch: mDeviceRepository.deviceLedSwitch.value,
+            deviceFwChecksum: mDeviceRepository.deviceFwChecksum.value,
+            deviceAncGain: mDeviceRepository.deviceAncGain.value,
+            deviceTransparencyGain: mDeviceRepository.deviceTransparencyGain.value,
+            deviceAncGainNum: mDeviceRepository.deviceAncGainNum.value,
+            deviceTransparencyGainNum: mDeviceRepository.deviceTransparencyGainNum.value,
             deviceRemoteEqSettings: deviceRemoteEqSettings,
-            deviceLeftIsMainSide: deviceRepository.deviceLeftIsMainSide.value,
-            deviceProductColor: deviceRepository.deviceProductColor.value,
-            deviceSoundEffect3d: deviceRepository.deviceSoundEffect3d.value,
-            deviceCapacities: deviceRepository.deviceCapacities.value?.rawValue,
-            deviceMaxPacketSize: deviceRepository.deviceMaxPacketSize.value
+            deviceLeftIsMainSide: mDeviceRepository.deviceLeftIsMainSide.value,
+            deviceProductColor: mDeviceRepository.deviceProductColor.value,
+            deviceSoundEffect3d: mDeviceRepository.deviceSoundEffect3d.value,
+            deviceCapacities: mDeviceRepository.deviceCapacities.value?.rawValue,
+            deviceMaxPacketSize: mDeviceRepository.deviceMaxPacketSize.value
         )
 
         deviceInfoSink?(toJSON(deviceInfo))

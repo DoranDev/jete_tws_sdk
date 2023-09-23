@@ -152,7 +152,6 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
         mDevices.sortWith(compareByDescending { (it as? Map<String, Any>)?.get("rssi") as? Int ?: -100 })
       }
-      mDeviceRepository
       scannerResultSink?.success(mDevices)
     }
 

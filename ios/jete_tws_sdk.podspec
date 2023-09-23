@@ -15,6 +15,11 @@ A new Flutter project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
+  s.vendored_frameworks='FR/DequeModule.framework',
+    'FR/RxRelay.framework',
+    'FR/RxSwift.framework',
+    'FR/SnapKit.framework',
+    'FR/Toaster.framework'
   s.platform = :ios, '11.0'
 
   # Flutter.framework does not contain a i386 slice.
