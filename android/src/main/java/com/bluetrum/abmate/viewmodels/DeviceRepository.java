@@ -354,7 +354,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
                     // 蓝牙开启后，重新获取已配对设备
                     updateBondedDevices();
                     // 如果符合条件，则开始扫描
-                    startScanIfMeetConditions();
+                   // startScanIfMeetConditions();
                 } else if (previousState == BluetoothAdapter.STATE_TURNING_OFF
                         && currentState == BluetoothAdapter.STATE_OFF) { // 关闭蓝牙
                     if (mIsScanning) {
