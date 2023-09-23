@@ -1,14 +1,14 @@
 // ignore_for_file: constant_identifier_names
 
-part of 'jete_tws_sdk.dart';
+part of '../jete_tws_sdk.dart';
 
-abstract class TwsWorkMode {
-  static const int WORK_MODE_NORMAL = 0x00;
-  static const int WORK_MODE_GAMING = 0x01;
+abstract class TwsLanguage {
+  static const int LANGUAGE_ENGLISH = 0x00;
+  static const int LANGUAGE_CHINESE = 0x01;
 
   static const Map<int, String> intToNameMap = {
-    WORK_MODE_NORMAL: 'WORK_MODE_NORMAL',
-    WORK_MODE_GAMING: 'WORK_MODE_GAMING',
+    LANGUAGE_ENGLISH: 'LANGUAGE_ENGLISH',
+    LANGUAGE_CHINESE: 'LANGUAGE_CHINESE',
   };
 
   int getControl();

@@ -2,19 +2,22 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/services.dart';
 import 'package:jete_tws_sdk/model/device_info_model.dart';
-part 'tws_anc_mode.dart';
-part 'tws_auto_shutdown.dart';
-part 'tws_command.dart';
-part 'tws_key.dart';
-part 'tws_language.dart';
-part 'tws_music_control.dart';
-part 'tws_work_mode.dart';
+part 'command/tws_anc_mode.dart';
+part 'command/tws_auto_shutdown.dart';
+part 'command/tws_command.dart';
+part 'command/tws_key.dart';
+part 'command/tws_language.dart';
+part 'command/tws_music_control.dart';
+part 'command/tws_work_mode.dart';
 
 class JeteTwsSdk {
   final methodChannel = const MethodChannel('jete_tws_sdk');
 
   void bondDevice({required device}) =>
       methodChannel.invokeMethod('bondDevice', {'bmac': jsonEncode(device)});
+
+  Future headsetIsConnected({required address}) =>
+      methodChannel.invokeMethod('headsetIsConnected', {'bmac': address});
   void disconnect() => methodChannel.invokeMethod('disconnect');
   void startScan() => methodChannel.invokeMethod('startScan');
   void stopScan() => methodChannel.invokeMethod('stopScan');

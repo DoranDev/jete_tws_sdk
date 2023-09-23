@@ -242,7 +242,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
                 stopScan();
             }
             // 处理之后，屏蔽此设备，相当于只取第一次检测到已连接的情况
-            mTempBlocklist.add(device.getAddress());
+           // mTempBlocklist.add(device.getAddress());
 
             deviceConnectionState.setValue(DEVICE_CONNECTION_STATE_PAIRING);
             mPreparingDevice.setValue(device);
@@ -324,7 +324,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
         // 更新设备连接状态
         deviceConnectionState.postValue(DEVICE_CONNECTION_STATE_IDLE);
 
-        startScanIfMeetConditions();
+      //  startScanIfMeetConditions();
     }
 
     private void startScanIfMeetConditions() {
@@ -354,7 +354,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
                     // 蓝牙开启后，重新获取已配对设备
                     updateBondedDevices();
                     // 如果符合条件，则开始扫描
-                    startScanIfMeetConditions();
+                   // startScanIfMeetConditions();
                 } else if (previousState == BluetoothAdapter.STATE_TURNING_OFF
                         && currentState == BluetoothAdapter.STATE_OFF) { // 关闭蓝牙
                     if (mIsScanning) {
@@ -420,7 +420,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
                         mPopupDevice.setValue(null);
                         mTempBlocklist.remove(device.getAddress());
                         // 如果符合条件，则开始扫描
-                        startScanIfMeetConditions();
+//                        startScanIfMeetConditions();
                     } else if (previousState == BluetoothDevice.BOND_BONDED && currentState == BluetoothDevice.BOND_BONDING) {
                         // 重新配对
                         deviceConnectionState.setValue(DEVICE_CONNECTION_STATE_PAIRING);
@@ -615,7 +615,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
 
     public void addDeviceToBlocklist(String deviceAddress, long blockTime) {
         if (blockTime == BLOCK_TIME_TEMP) {
-            mTempBlocklist.add(deviceAddress);
+          //  mTempBlocklist.add(deviceAddress);
         } else if (blockTime == BLOCK_TIME_FOREVER) {
             mDeviceManagerApi.insertBlockRecord(deviceAddress, blockTime);
         } else {
@@ -692,34 +692,34 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
         final String deviceAddress = device.getAddress();
       //  Log.d("handleEarbudsFound",deviceAddress);
         // Check if it's the device disconnected by user last time
-        if (deviceAddress.equals(deviceAddressDisconnectedByUser)) {
-            return;
-        }
+//        if (deviceAddress.equals(deviceAddressDisconnectedByUser)) {
+//            return;
+//        }
 
-        if (headsetIsConnected(device.getDevice())) {
-            // 停止扫描
-            stopScan();
-            // Connect to device is active
-            bondDevice(device);
-            // 处理之后，屏蔽此设备，相当于只取第一次检测到已连接的情况
-            mTempBlocklist.add(device.getAddress());
-            return;
-        }
+//        if (headsetIsConnected(device.getDevice())) {
+//            // 停止扫描
+//            stopScan();
+//            // Connect to device is active
+//            bondDevice(device);
+//            // 处理之后，屏蔽此设备，相当于只取第一次检测到已连接的情况
+//           // mTempBlocklist.add(device.getAddress());
+//            return;
+//        }
 
         // If device indicates it's connected
-        if (device.isConnected()) {
-            Timber.w("handleEarbudsFound: Can't be here");
-            return;
-        }
+//        if (device.isConnected()) {
+//            Timber.w("handleEarbudsFound: Can't be here");
+//            return;
+//        }
 
         Date now = Calendar.getInstance().getTime();
         // 更新扫描到的设备的时间戳
         updateTimestamp(deviceAddress, now);
 
         // Check if device is still blocked
-        if (isDeviceStillBlocked(deviceAddress)) {
-            return;
-        }
+//        if (isDeviceStillBlocked(deviceAddress)) {
+//            return;
+//        }
 
         // 是否当前正在弹窗的设备
         if (isPopupDevice(device.getDevice())) {

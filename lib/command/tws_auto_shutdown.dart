@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
-part of 'jete_tws_sdk.dart';
+part of '../jete_tws_sdk.dart';
 
 abstract class TwsAutoShutdown {
   static const int AUTO_SHUTDOWN_IMMEDIATELY = 0x00;

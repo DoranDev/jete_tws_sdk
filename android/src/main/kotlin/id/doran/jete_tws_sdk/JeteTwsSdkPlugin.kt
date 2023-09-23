@@ -3,9 +3,9 @@ package id.doran.jete_tws_sdk
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.util.Log
-import android.util.SparseArray
 import com.bluetrum.abmate.BuildConfig
 import com.bluetrum.abmate.utils.Utils
 import com.bluetrum.abmate.viewmodels.DefaultDeviceCommManager
@@ -173,35 +173,41 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 //      val DEVICE_CONNECTION_STATE_AUTHENTICATING = 5
 //      val DEVICE_CONNECTION_STATE_AUTHENTICATED = 6
       deviceConnectionStateSink?.success(state)
-      when (state) {
-        DeviceRepository.DEVICE_CONNECTION_STATE_IDLE -> {
-          // handle idle state
-        }
-        DeviceRepository.DEVICE_CONNECTION_STATE_PAIRING -> {
-          // handle pairing state
-        }
-        // other states
-      }
+//      when (state) {
+//        DeviceRepository.DEVICE_CONNECTION_STATE_IDLE -> {
+//          // handle idle state
+//        }
+//        DeviceRepository.DEVICE_CONNECTION_STATE_PAIRING -> {
+//          // handle pairing state
+//        }
+//        // other states
+//      }
     }
 
     mDeviceRepository.popupDevice.observeForever { device ->
       // handle popup device
       Log.d("popupDevice","$device")
-      val item: MutableMap<String, Any> = deviceMap(device)
-      popupDeviceSink?.success(item)
+      if(device!=null) {
+        val item: MutableMap<String, Any> = deviceMap(device)
+        popupDeviceSink?.success(item)
+      }
     }
 
     mDeviceRepository.activeDevice.observeForever { device ->
       // handle active device
       Log.d("activeDevice","$device")
-      val item: MutableMap<String, Any> = deviceMap(device)
-      activeDeviceSink?.success(item)
+      if(device!=null) {
+        val item: MutableMap<String, Any> = deviceMap(device)
+        activeDeviceSink?.success(item)
+      }
     }
 
     mDeviceRepository.scanningState.observeForever { scanning ->
       // handle scanning state
-      Log.d("scanningState","$scanning")
-      scanningStateSink?.success(scanning)
+      if(scanning!=null) {
+        Log.d("scanningState", "$scanning")
+        scanningStateSink?.success(scanning)
+      }
     }
   }
 
@@ -224,6 +230,19 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       mDeviceRepository.bondDevice(abDevice)
     }
   }
+
+  private fun headsetIsConnected(deviceAddress:String):Boolean {
+    Log.d("headsetIsConnected", deviceAddress)
+
+    val bluetoothManager = mContext.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+    val bluetoothAdapter = bluetoothManager.adapter
+      ?:return false
+
+    val blueDevice = bluetoothAdapter.getRemoteDevice(deviceAddress)
+
+    return mDeviceRepository.headsetIsConnected(blueDevice)
+  }
+
 
 
   private fun disconnect() {
@@ -312,6 +331,13 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       }
       "disconnect"  -> disconnect()
       "deviceInfo"  -> deviceInfo()
+      "headsetIsConnected"  -> {
+        val bmac: String? = call.argument<String>("bmac")
+        if (bmac != null) {
+          val isConnected: Boolean = headsetIsConnected(bmac)
+          result.success(isConnected)
+        }
+      }
       "sendRequest" ->{
         val strRequest: String? = call.argument<String>("strRequest")
         val gain: Byte? = call.argument<Int>("gain")?.toByte()
@@ -405,6 +431,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
   override fun onDetachedFromEngine( binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
+    mDeviceRepository.unregisterBroadcastReceivers()
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
