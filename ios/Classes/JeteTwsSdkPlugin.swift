@@ -60,7 +60,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     private var scanningStateSink: FlutterEventSink?
     
     private var mDevices = [Dictionary<String, Any>]()
-    private var mABDevices = [ABDevice]
+    private var mABDevices = [ABDevice]()
     private let disposeBag = DisposeBag()
     
     

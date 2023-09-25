@@ -1,14 +1,13 @@
 //
-//  OtaStateNotificationCallable.swift
-//  FOTA
+//  BytePayloadHandler.swift
+//  DeviceManager
 //
-//  Created by Bluetrum.
-//  
+//  Created by Bluetrum on 2022/3/7.
+//
 
 import Foundation
 
-
-public final class OtaStateNotificationCallable: AbstractPayloadHandler {
+public final class UInt8PayloadHandler: AbstractPayloadHandler {
     
     public override func callAsFunction() -> AnyObject? {
         if payload.count == 1 {

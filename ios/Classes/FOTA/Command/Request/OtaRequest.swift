@@ -6,7 +6,7 @@
 //  
 
 import Foundation
-import DeviceManager
+
 
 public class OtaRequest: Request {
     
