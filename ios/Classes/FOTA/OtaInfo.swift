@@ -6,7 +6,7 @@
 //  
 
 import Foundation
-
+import Utils
 
 final class OtaInfo {
     

@@ -9,6 +9,7 @@ import Foundation
 import RxRelay
 import CoreBluetooth
 
+
 class ScannerViewModel: BaseViewModel {
     
     static let shared = ScannerViewModel()

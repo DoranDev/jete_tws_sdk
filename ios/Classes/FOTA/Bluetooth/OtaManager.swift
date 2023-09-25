@@ -284,7 +284,7 @@ public class OtaManager: NSObject {
     }
     
     private func handleTimeout() {
-        //logger?.e(.otaManager, "Waiting for response timeout")
+        logger?.e(.otaManager, "Waiting for response timeout")
         notifyOnError(OTAError.timeoutWaitingResponse)
     }
     
