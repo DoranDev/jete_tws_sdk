@@ -1,3 +1,11 @@
+## 1.0.7
+
+* ios
+
+## 1.0.6
+
+* Equalizer error
+
 ## 1.0.5
 
 * Equalizer error
