@@ -105,8 +105,12 @@ class JeteTwsSdk {
           Map<String, dynamic> decodedJson = jsonDecode(json);
           return DeviceInfo.fromJson(decodedJson);
         } catch (e) {
-          log(e.toString());
-          return null;
+          try {
+            return DeviceInfo.fromJson(Map<String, dynamic>.from(json));
+          } catch (e) {
+            log(e.toString());
+            return null;
+          }
         }
       });
 
