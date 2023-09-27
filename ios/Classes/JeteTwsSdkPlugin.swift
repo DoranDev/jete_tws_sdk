@@ -65,15 +65,16 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     
     
     private func deviceMap(_ value: ABDevice) -> [String: Any] {
+        let device = value as! ABEarbuds
         var item: [String: Any] = [:]
-        item["deviceName"] = value.name
-        item["deviceMacAddress"] = value.peripheral.identifier.uuidString
-        item["deviceBleAddress"] = value.peripheral.identifier.uuidString
+        item["deviceName"] = device.name
+        item["deviceMacAddress"] = device.btAddress
+        item["deviceBleAddress"] = device.peripheral.identifier.uuidString
         item["rssi"] = value.rssi
         return item
     }
 
-    
+
     private func initDevice() {
         mDeviceRepository.latestDiscoveredDevice.subscribeOnNext { [weak self] device in
             if let value = device {
@@ -86,6 +87,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
                     self?.mDevices.append(item ?? [:])
                 }
 
+
                 self?.mDevices.sort { (dict1, dict2) -> Bool in
                     let rssi1 = (dict1 as [String: Any])["rssi"] as? Int ?? -100
                     let rssi2 = (dict2 as [String: Any])["rssi"] as? Int ?? -100
@@ -94,7 +96,8 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             }
             self?.scannerResultSink?(self?.mDevices ?? [])
         }.disposed(by: disposeBag)
-        
+
+
         mDeviceRepository.activeDevice.subscribeOnNext { [weak self] device in
             if(device != nil){
                 let item = self?.deviceMap(device!)
@@ -104,7 +107,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
 
-    
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "jete_tws_sdk", binaryMessenger: registrar.messenger())
     let instance = JeteTwsSdkPlugin(channel)
@@ -124,39 +127,42 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
       let scanningStateChannel = FlutterEventChannel(name: eventChannelNameScanningState, binaryMessenger:registrar.messenger())
       scanningStateChannel.setStreamHandler(instance)
   }
-    
+
     init (_ channel: FlutterMethodChannel) {
         super.init()
         initDevice()
    }
-    
+
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
       switch call.method {
           case "startScan":
               startScan()
               result(nil)
-              
+
           case "stopScan":
               stopScan()
               result(nil)
-              
+
           case "bondDevice":
-              if let bmac = call.arguments as? String {
-                  bondDevice(device: bmac)
+                if let args = call.arguments as? [String: Any] {
+                  bondDevice(device: args["bmac"] as! String)
                   result(nil)
               } else {
                   result(FlutterError(code: "InvalidArgument", message: "Invalid argument for 'bmac'", details: nil))
               }
-              
+
           case "disconnect":
               disconnect()
               result(nil)
-              
+
           case "deviceInfo":
               deviceInfo()
               result(nil)
-              
+
+          case "headsetIsConnected":
+              result(true)
+
           case "sendRequest":
               if let args = call.arguments as? [String: Any],
                  let strRequest = args["strRequest"] as? String {
@@ -172,7 +178,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
                       let keyType = args["keyType"] as? UInt8
                       let keyFunction = args["keyFunction"] as? UInt8
                       let controlType = args["controlType"] as? UInt8
-                  
+
                   var request: Request?
                   switch strRequest {
                       case "AncGainRequest":
@@ -223,7 +229,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
                       default:
                           request = nil
                   }
-                  
+
                   if let request = request {
                       mDeviceRepository.deviceCommManager.sendRequest(request)
                       print("sendRequest", request)
@@ -231,18 +237,18 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
               } else {
                   result(FlutterError(code: "InvalidArgument", message: "Invalid argument for 'sendRequest'", details: nil))
               }
-          
+
           default:
               result(FlutterMethodNotImplemented)
           }
   }
-   
+
     private func startScan() {
         print("startScan")
         mDevices.removeAll()
         mDeviceRepository.startScanning()
     }
-    
+
     private func stopScan() {
         print("stopScan")
         mDeviceRepository.stopScanning()
@@ -252,19 +258,19 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         print("disconnect")
         mDeviceRepository.disconnect()
     }
-    
+
 
 
     private func bondDevice(device: String) {
-        print("abDevice", device)
         if let dictionary = try? JSONSerialization.jsonObject(with: device.data(using: .utf8)!, options: []) as? [String: Any] {
             let abDevice = deviceFromFlutter(device: dictionary, devices: mABDevices)
             if let abDevice = abDevice {
+                print("connect", device)
                 mDeviceRepository.connect(abDevice)
             }
         }
     }
-    
+
     private func deviceFromFlutter(device: [String: Any?], devices: [ABDevice]) -> ABDevice? {
         if devices.isEmpty {
             print("deviceFromFlutter: devices list is empty")
@@ -273,7 +279,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
 
         for abDevice in devices {
             print("deviceFromFlutter: \(abDevice.peripheral.identifier)")
-            if abDevice.peripheral.identifier.uuidString == device["deviceIdentifier"] as? String {
+            if abDevice.peripheral.identifier.uuidString == device["deviceBleAddress"] as? String {
                 return abDevice
             }
         }
@@ -284,13 +290,13 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     private func deviceInfo() {
         print("sendRequest", "deviceInfo")
         mDeviceRepository.deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest)
-        
+
         // Sleep for 500 milliseconds (0.5 seconds)
         Thread.sleep(forTimeInterval: 0.5)
-        
+
         getLiveData()
     }
-    
+
     private func getLiveData() {
         var devicePower = [String: Any]()
         let mdevicePower = mDeviceRepository.devicePower.value
@@ -313,7 +319,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         let mdeviceEqSetting = mDeviceRepository.deviceEqSetting.value
         deviceEqSetting["mode"] = mdeviceEqSetting?.mode
         deviceEqSetting["gains"] = mdeviceEqSetting?.gains
-        
+
         var deviceKeySettings = [[String: Any]()]
         let mdeviceKeySettings = mDeviceRepository.deviceKeySettings.value
         mdeviceKeySettings?.forEach({ (key: KeyType, value: KeyFunction) in
@@ -321,7 +327,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             deviceKeySetting[String(key.rawValue)] = value.rawValue
             deviceKeySettings.append(deviceKeySetting)
         })
-        
+
         var deviceRemoteEqSettings = [[String: Any]()]
         let mdeviceRemoteEqSettings = mDeviceRepository.deviceRemoteEqSettings.value
         mdeviceRemoteEqSettings?.forEach({ RemoteEqSetting in
@@ -359,6 +365,8 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             deviceCapacities: mDeviceRepository.deviceCapacities.value?.rawValue,
             deviceMaxPacketSize: mDeviceRepository.deviceMaxPacketSize.value
         )
+
+        print(toJSON(deviceInfo)?.description ?? "gagal device info")
 
         deviceInfoSink?(toJSON(deviceInfo))
     }
