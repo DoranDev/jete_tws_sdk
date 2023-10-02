@@ -337,51 +337,48 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             deviceRemoteEqSettings.append(deviceEqSetting)
         })
 
-        let deviceInfo = DeviceInfoModel(
-            devicePower: devicePower,
-            deviceFirmwareVersion: mDeviceRepository.deviceFirmwareVersion.value,
-            deviceName: mDeviceRepository.deviceName.value,
-            deviceEqSetting: deviceEqSetting,
-            deviceKeySettings: deviceKeySettings,
-            deviceVolume: mDeviceRepository.deviceVolume.value,
-            devicePlayState: mDeviceRepository.devicePlayState.value,
-            deviceWorkMode: mDeviceRepository.deviceWorkMode.value,
-            deviceInEarStatus: mDeviceRepository.deviceInEarStatus.value,
-            deviceLanguageSetting: mDeviceRepository.deviceLanguageSetting.value,
-            deviceAutoAnswer: mDeviceRepository.deviceAutoAnswer.value,
-            deviceAncMode: mDeviceRepository.deviceAncMode.value,
-            deviceIsTws: mDeviceRepository.deviceIsTws.value,
-            deviceTwsConnected: mDeviceRepository.deviceTwsConnected.value,
-            deviceLedSwitch: mDeviceRepository.deviceLedSwitch.value,
-            deviceFwChecksum: mDeviceRepository.deviceFwChecksum.value,
-            deviceAncGain: mDeviceRepository.deviceAncGain.value,
-            deviceTransparencyGain: mDeviceRepository.deviceTransparencyGain.value,
-            deviceAncGainNum: mDeviceRepository.deviceAncGainNum.value,
-            deviceTransparencyGainNum: mDeviceRepository.deviceTransparencyGainNum.value,
-            deviceRemoteEqSettings: deviceRemoteEqSettings,
-            deviceLeftIsMainSide: mDeviceRepository.deviceLeftIsMainSide.value,
-            deviceProductColor: mDeviceRepository.deviceProductColor.value,
-            deviceSoundEffect3d: mDeviceRepository.deviceSoundEffect3d.value,
-            deviceCapacities: mDeviceRepository.deviceCapacities.value?.rawValue,
-            deviceMaxPacketSize: mDeviceRepository.deviceMaxPacketSize.value
-        )
-
-        print(toJSON(deviceInfo)?.description ?? "gagal device info")
-
-        deviceInfoSink?(toJSON(deviceInfo))
+        
+        var deviceInfo = [String: Any]()
+        deviceInfo["devicePower"] = devicePower
+        deviceInfo["deviceFirmwareVersion"] = mDeviceRepository.deviceFirmwareVersion.value
+        deviceInfo["deviceName"] = mDeviceRepository.deviceName.value
+        deviceInfo["deviceEqSetting"] = deviceEqSetting
+        deviceInfo["deviceKeySettings"] = deviceKeySettings
+        deviceInfo["deviceVolume"] = mDeviceRepository.deviceVolume.value
+        deviceInfo["devicePlayState"] = mDeviceRepository.devicePlayState.value
+        deviceInfo["deviceWorkMode"] = mDeviceRepository.deviceWorkMode.value
+        deviceInfo["deviceInEarStatus"] = mDeviceRepository.deviceInEarStatus.value
+        deviceInfo["deviceLanguageSetting"] = mDeviceRepository.deviceLanguageSetting.value
+        deviceInfo["deviceAutoAnswer"] = mDeviceRepository.deviceAutoAnswer.value
+        deviceInfo["deviceAncMode"] = mDeviceRepository.deviceAncMode.value
+        deviceInfo["deviceIsTws"] = mDeviceRepository.deviceIsTws.value
+        deviceInfo["deviceTwsConnected"] = mDeviceRepository.deviceTwsConnected.value
+        deviceInfo["deviceLedSwitch"] = mDeviceRepository.deviceLedSwitch.value
+        deviceInfo["deviceFwChecksum"] = mDeviceRepository.deviceFwChecksum.value
+        deviceInfo["deviceAncGain"] = mDeviceRepository.deviceAncGain.value
+        deviceInfo["deviceTransparencyGain"] = mDeviceRepository.deviceTransparencyGain.value
+        deviceInfo["deviceAncGainNum"] = mDeviceRepository.deviceAncGainNum.value
+        deviceInfo["deviceTransparencyGainNum"] = mDeviceRepository.deviceTransparencyGainNum.value
+        deviceInfo["deviceRemoteEqSettings"] = deviceRemoteEqSettings
+        deviceInfo["deviceLeftIsMainSide"] = mDeviceRepository.deviceLeftIsMainSide.value
+        deviceInfo["deviceProductColor"] = mDeviceRepository.deviceProductColor.value
+        deviceInfo["deviceSoundEffect3d"] = mDeviceRepository.deviceSoundEffect3d.value
+        deviceInfo["deviceCapacities"] = mDeviceRepository.deviceCapacities.value?.rawValue
+        deviceInfo["deviceMaxPacketSize"] = mDeviceRepository.deviceMaxPacketSize.value
+        deviceInfoSink?(deviceInfo)
     }
 
 
-    func toJSON<T: Encodable>(_ value: T) -> String? {
-        let encoder = JSONEncoder()
-        do {
-            let jsonData = try encoder.encode(value)
-            let jsonString = String(data: jsonData, encoding: .utf8)
-            return jsonString
-        } catch {
-            print("Error encoding value to JSON: \(error)")
-            return nil
-        }
-    }
+//    func toJSON<T: Encodable>(_ value: T) -> String? {
+//        let encoder = JSONEncoder()
+//        do {
+//            let jsonData = try encoder.encode(value)
+//            let jsonString = String(data: jsonData, encoding: .utf8)
+//            return jsonString
+//        } catch {
+//            print("Error encoding value to JSON: \(error)")
+//            return nil
+//        }
+//    }
     
 }

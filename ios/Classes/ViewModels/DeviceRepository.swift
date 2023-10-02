@@ -212,19 +212,20 @@ extension DeviceRepository: BluetoothDelegate {
         isScanning = false
     }
     
+
     func didDiscoverPeripheral(_ peripheral: CBPeripheral, advertisementData: [String : Any], RSSI: NSNumber) {
-        
+
         if let manufacturerData = advertisementData.manufacturerData(companyId: GlobalConfig.MANUFACTURER_ID),
            let deviceBeacon = DeviceBeacon.getDeviceBeacon(data: manufacturerData),
            deviceBeacon.brandId == GlobalConfig.BRAND_ID >> 16 {
-            
+
 //            logger?.v(.deviceRepository, "\(deviceBeacon)")
-            
+
             // 如果是耳机广播
             if let earbudsBeacon = deviceBeacon as? EarbudsBeacon {
                 // 如果广播里包含的地址和当前连接的音频设备相同（理所当然isConnected==true）
                 // 或者未连接
-                if (earbudsBeacon.btAddress == Utils.bluetoothAudioDeviceAddress) || !earbudsBeacon.isConnected {
+              //  if (earbudsBeacon.btAddress == Utils.bluetoothAudioDeviceAddress) || !earbudsBeacon.isConnected {
                     // 如果设备已经存在于列表，则更新状态
                     // 否则列表添加新设备
                     if let device = _discoveredDevices.first(where: { $0.peripheral == peripheral }) {
@@ -233,38 +234,38 @@ extension DeviceRepository: BluetoothDelegate {
                         latestDiscoveredDevice.accept(device)
                     } else if peripheral.name != nil {
                         // TODO: Define Product ID
-                        if earbudsBeacon.productId == 1 {
+                      //  if earbudsBeacon.productId == 1 {
                             let device = ABEarbuds(peripheral: peripheral, earbudsBeacon: earbudsBeacon)
                             device.rssi = RSSI.intValue
                             discoverDevice(device)
-                        }
+                      //  }
                     }
-                }
+              //  }
             }
         }
     }
-    
+
     func didConnectedPeripheral(_ connectedPeripheral: CBPeripheral) {
-        
+
         if connectedPeripheral == workingDevice?.peripheral {
             logger?.i(.deviceRepository, "Connected to \(workingDevice!.name ?? "Unknown Device")")
             preparingDevice?.connect()
         }
     }
-    
+
     func failToConnectPeripheral(_ peripheral: CBPeripheral, error: Error?) {
-        
+
         if let error = error {
             logger?.w(.deviceRepository, error)
         } else {
             logger?.d(.deviceRepository, "Device is disconnected")
         }
     }
-    
+
     func didDisconnectPeripheral(_ peripheral: CBPeripheral, error: Error?) {
-        
+
         if peripheral == self.workingDevice?.peripheral {
-            
+
             let deviceNotSupported = preparingDevice != nil
 
             if let error = error as NSError? {
@@ -279,13 +280,13 @@ extension DeviceRepository: BluetoothDelegate {
                     logger?.e(.deviceRepository, "Disconnected from \(peripheral.name ?? "Unknown Device") with error: Device not supported")
                 }
             }
-            
+
             self.workingDevice = nil
-            
+
             onDisconnected()
         }
     }
-    
+
     func connectionEventDidOccur(_ event: CBConnectionEvent, for peripheral: CBPeripheral) {
         switch event {
         case .peerDisconnected:
@@ -296,40 +297,40 @@ extension DeviceRepository: BluetoothDelegate {
             print("connectionEventDidOccur: unknown event")
         }
     }
-    
+
 }
 
 // MARK: - ConnectionStateCallback
 
 extension DeviceRepository: ConnectionStateCallback {
-    
+
     func onConnected(device: ABDevice) {
         deviceCommManager.commDelegate = device
         deviceCommManager.responseErrorHandler = self
-        
+
         // 先获取MTU，以便设置分包大小，然后再获取其他信息
         // First of all, require MTU, in order to set max packet size, and then require other info
         registerMaxPacketSizeCallable()
         deviceCommManager.sendRequest(DeviceInfoRequest(Command.INFO_MAX_PACKET_SIZE))
     }
-    
+
     func onReceiveAuthResult(device: ABDevice, passed: Bool) {
-        if passed {
-            _activeDevice = device
-            
-            // Require all device info
-            deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest) { request, result, timeout in
-                guard #available(iOS 13.2, *), device.supportCTKD else { return }
-                guard let result = result as? Bool, result else { return }
-                
-                device.triggerCTKD()
-            }
-        } else {
-            device.stop()
-            bluetoothManager.disconnect(device.peripheral)
-        }
-        // 已经不处于认证状态
-        preparingDevice = nil
+//        if passed {
+//            _activeDevice = device
+//
+//            // Require all device info
+//            deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest) { request, result, timeout in
+//                guard #available(iOS 13.2, *), device.supportCTKD else { return }
+//                guard let result = result as? Bool, result else { return }
+//
+//                device.triggerCTKD()
+//            }
+//        } else {
+//            device.stop()
+//            bluetoothManager.disconnect(device.peripheral)
+//        }
+//        // 已经不处于认证状态
+//        preparingDevice = nil
     }
     
 }
