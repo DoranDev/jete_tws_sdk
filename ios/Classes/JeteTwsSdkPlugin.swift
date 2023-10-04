@@ -161,8 +161,11 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
               result(nil)
 
           case "headsetIsConnected":
-              result(true)
-
+              if let args = call.arguments as? [String: Any] {
+                    result(deviceIsConnected(device: args["bmac"] as! String))
+                } else {
+                    result(false)
+                }
           case "sendRequest":
               if let args = call.arguments as? [String: Any],
                  let strRequest = args["strRequest"] as? String {
@@ -258,7 +261,17 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         print("disconnect")
         mDeviceRepository.disconnect()
     }
-
+    
+    
+    private func deviceIsConnected(device: String) -> Bool{
+        if let dictionary = try? JSONSerialization.jsonObject(with: device.data(using: .utf8)!, options: []) as? [String: Any] {
+            let abDevice = deviceFromFlutter(device: dictionary, devices: mABDevices)
+            if let abDevice = abDevice {
+                return abDevice.isConnected
+            }
+        }
+        return false
+    }
 
 
     private func bondDevice(device: String) {
