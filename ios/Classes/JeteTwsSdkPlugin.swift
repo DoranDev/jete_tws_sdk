@@ -379,11 +379,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         deviceInfo["deviceCapacities"] = mDeviceRepository.deviceCapacities.value?.rawValue
         deviceInfo["deviceMaxPacketSize"] = mDeviceRepository.deviceMaxPacketSize.value
 
-                let encoder = JSONEncoder()
-                    let jsonData = try encoder.encode(deviceInfo)
-                    let jsonString = String(data: jsonData, encoding: .utf8)
-
-        deviceInfoSink?(jsonString)
+        deviceInfoSink?(deviceInfo)
     }
 
 
