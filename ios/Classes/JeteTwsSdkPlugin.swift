@@ -21,7 +21,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             activeDeviceSink = events
             break;
         case JeteTwsSdkPlugin.eventChannelNameDeviceInfo:
-            activeDeviceSink = events
+            deviceInfoSink = events
             break;
         case JeteTwsSdkPlugin.eventChannelNameScanningState:
             scanningStateSink = events
@@ -378,7 +378,12 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         deviceInfo["deviceSoundEffect3d"] = mDeviceRepository.deviceSoundEffect3d.value
         deviceInfo["deviceCapacities"] = mDeviceRepository.deviceCapacities.value?.rawValue
         deviceInfo["deviceMaxPacketSize"] = mDeviceRepository.deviceMaxPacketSize.value
-        deviceInfoSink?(deviceInfo)
+
+                let encoder = JSONEncoder()
+                    let jsonData = try encoder.encode(deviceInfo)
+                    let jsonString = String(data: jsonData, encoding: .utf8)
+
+        deviceInfoSink?(jsonString)
     }
 
 
