@@ -333,12 +333,10 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         deviceEqSetting["mode"] = mdeviceEqSetting?.mode
         deviceEqSetting["gains"] = mdeviceEqSetting?.gains
 
-        var deviceKeySettings = [[String: Any]()]
+        var deviceKeySettings = [String: Any]()
         let mdeviceKeySettings = mDeviceRepository.deviceKeySettings.value
         mdeviceKeySettings?.forEach({ (key: KeyType, value: KeyFunction) in
-            var deviceKeySetting = [String: Any]()
-            deviceKeySetting[String(key.rawValue)] = value.rawValue
-            deviceKeySettings.append(deviceKeySetting)
+            deviceKeySettings[String(key.rawValue)] = value.rawValue
         })
 
         var deviceRemoteEqSettings = [[String: Any]()]

@@ -106,39 +106,39 @@ class JeteTwsSdk {
           .receiveBroadcastStream(_deviceInfoChannel.name)
           .map<DeviceInfo?>((dynamic json) {
         if (Platform.isIOS) {
-          Map<String, dynamic> map = {};
-          map["devicePower"] = json["devicePower"];
-          map["deviceFirmwareVersion"] = json["deviceFirmwareVersion"];
-          map["deviceName"] = json["deviceName"];
-          map["deviceEqSetting"] = json["deviceEqSetting"];
-          map["deviceKeySettings"] = json["deviceKeySettings"];
-          map["deviceVolume"] = json["deviceVolume"];
-          map["devicePlayState"] = json["devicePlayState"];
-          map["deviceWorkMode"] = json["deviceWorkMode"];
-          map["deviceInEarStatus"] = json["deviceInEarStatus"];
-          map["deviceLanguageSetting"] = json["deviceLanguageSetting"];
-          map["deviceAutoAnswer"] = json["deviceAutoAnswer"];
-          map["deviceAncMode"] = json["deviceAncMode"];
-          map["deviceIsTws"] = json["deviceIsTws"];
-          map["deviceTwsConnected"] = json["deviceTwsConnected"];
-          map["deviceLedSwitch"] = json["deviceLedSwitch"];
-          map["deviceFwChecksum"] = json["deviceFwChecksum"];
-          map["deviceAncGain"] = json["deviceAncGain"];
-          map["deviceTransparencyGain"] = json["deviceTransparencyGain"];
-          map["deviceAncGainNum"] = json["deviceAncGainNum"];
-          map["deviceTransparencyGainNum"] = json["deviceTransparencyGainNum"];
-          map["deviceRemoteEqSettings"] = json["deviceRemoteEqSettings"];
-          map["deviceLeftIsMainSide"] = json["deviceLeftIsMainSide"];
-          map["deviceProductColor"] = json["deviceProductColor"];
-          map["deviceSoundEffect3d"] = json["deviceSoundEffect3d"];
-          map["deviceCapacities"] = json["deviceCapacities"];
-          map["deviceMaxPacketSize"] = json["deviceMaxPacketSize"];
-          try {
-            return DeviceInfo.fromJson(map);
-          } catch (e) {
-            log(e.toString());
-            return null;
-          }
+          Map<String, dynamic> map = Map<String, dynamic>.from(json ?? {});
+          // Map<String, dynamic> devicePowerMap = Map<String, dynamic>.from(json["devicePower"]);
+          // devicePowerMap.forEach((key, value) {
+          //   final powerMap = Map<String, dynamic>.from(value);
+          //   devicePowerMap["$key"] = powerMap;
+          // });
+          // map["devicePower"] = devicePowerMap;
+          // map["deviceFirmwareVersion"] = json["deviceFirmwareVersion"];
+          // map["deviceName"] = json["deviceName"];
+          // map["deviceEqSetting"] = json["deviceEqSetting"];
+          // map["deviceKeySettings"] = json["deviceKeySettings"];
+          // map["deviceVolume"] = json["deviceVolume"];
+          // map["devicePlayState"] = json["devicePlayState"];
+          // map["deviceWorkMode"] = json["deviceWorkMode"];
+          // map["deviceInEarStatus"] = json["deviceInEarStatus"];
+          // map["deviceLanguageSetting"] = json["deviceLanguageSetting"];
+          // map["deviceAutoAnswer"] = json["deviceAutoAnswer"];
+          // map["deviceAncMode"] = json["deviceAncMode"];
+          // map["deviceIsTws"] = json["deviceIsTws"];
+          // map["deviceTwsConnected"] = json["deviceTwsConnected"];
+          // map["deviceLedSwitch"] = json["deviceLedSwitch"];
+          // map["deviceFwChecksum"] = json["deviceFwChecksum"];
+          // map["deviceAncGain"] = json["deviceAncGain"];
+          // map["deviceTransparencyGain"] = json["deviceTransparencyGain"];
+          // map["deviceAncGainNum"] = json["deviceAncGainNum"];
+          // map["deviceTransparencyGainNum"] = json["deviceTransparencyGainNum"];
+          // map["deviceRemoteEqSettings"] = json["deviceRemoteEqSettings"];
+          // map["deviceLeftIsMainSide"] = json["deviceLeftIsMainSide"];
+          // map["deviceProductColor"] = json["deviceProductColor"];
+          // map["deviceSoundEffect3d"] = json["deviceSoundEffect3d"];
+          // map["deviceCapacities"] = json["deviceCapacities"];
+          // map["deviceMaxPacketSize"] = json["deviceMaxPacketSize"];
+          return DeviceInfo.fromJson(map);
         } else {
           try {
             Map<String, dynamic> decodedJson = jsonDecode(json);
