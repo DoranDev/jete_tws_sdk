@@ -139,11 +139,14 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
           case "startScan":
               startScan()
               result(nil)
-
+          break;
           case "stopScan":
               stopScan()
               result(nil)
-
+          break;
+         case "gotoBluetoothSettingIOS":
+          UIApplication.shared.open(URL(string: "App-Prefs:root=Bluetooth")!)
+          break;
           case "bondDevice":
                 if let args = call.arguments as? [String: Any] {
                   bondDevice(device: args["bmac"] as! String)
@@ -151,21 +154,22 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
               } else {
                   result(FlutterError(code: "InvalidArgument", message: "Invalid argument for 'bmac'", details: nil))
               }
-
+          break;
           case "disconnect":
               disconnect()
               result(nil)
-
+          break;
           case "deviceInfo":
               deviceInfo()
               result(nil)
-
+          break;
           case "headsetIsConnected":
               if let args = call.arguments as? [String: Any] {
                     result(deviceIsConnected(device: args["bmac"] as! String))
                 } else {
                     result(false)
                 }
+          break;
           case "sendRequest":
               if let args = call.arguments as? [String: Any],
                  let strRequest = args["strRequest"] as? String {
@@ -186,16 +190,22 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
                   switch strRequest {
                       case "AncGainRequest":
                           request = gain.map { AncGainRequest($0) }
+                      break;
                       case "AncModeRequest":
                       request = mode.map { AncModeRequest(AncMode(rawValue: $0) ?? AncMode.off) }
+                      break;
                       case "AutoAnswerRequest":
                           request = enable.map { AutoAnswerRequest($0) }
+                      break;
                       case "AutoShutdownRequest":
                       request = setting.map { AutoShutdownRequest(AutoShutdownSetting.time($0)) }
+                      break;
                       case "BluetoothNameRequest":
                           request = BluetoothNameRequest(bluetoothName ?? "")
+                      break;
                       case "ClearPairRecordRequest":
                           request = ClearPairRecordRequest()
+                      break;
                       case "EqRequest":
                       if let eqGainsByteArray = eqGainList?.compactMap({ $0 }) {
                           let gainsIntArray = eqGainsByteArray.withUnsafeBytes { Array($0.bindMemory(to: Int8.self)) }
@@ -205,30 +215,41 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
                               EqRequest.PresetEqRequest(eqMode: $0, gains: gainsIntArray)
                           }
                       }
+                      break;
                       case "FactoryResetRequest":
                           request = FactoryResetRequest()
+                      break;
                       case "FindDeviceRequest":
                           request = enable.map { FindDeviceRequest($0) }
+                      break;
                       case "InEarDetectRequest":
                           request = enable.map { InEarDetectRequest($0) }
+                      break;
                       case "KeyRequest":
                           request = keyType.flatMap { keyTypeValue in
                               keyFunction.map { keyFunctionValue in
                                   KeyRequest(keyType: KeyType(rawValue: keyTypeValue) ?? KeyType.rightTripleTap, keyFunction: KeyFunction(rawValue: keyFunctionValue) ?? KeyFunction.none)
                               }
                           }
+                      break;
                       case "LanguageRequest":
                       request = language.map { LanguageRequest(LanguageSetting(rawValue: $0) ?? LanguageSetting.english) }
+                      break;
                       case "LedSwitchRequest":
                           request = enable.map { LedSwitchRequest($0) }
+                      break;
                       case "MusicControlRequest":
                       request = controlType.map { _ in MusicControlRequest(MusicControlType.next)}
+                      break;
                       case "SoundEffect3dRequest":
                           request = enable.map { SoundEffect3dRequest($0) }
+                      break;
                       case "TransparencyGainRequest":
                           request = gain.map { TransparencyGainRequest($0) }
+                      break;
                       case "WorkModeRequest":
                       request = mode.map { WorkModeRequest(WorkMode(rawValue: $0) ?? WorkMode.normal) }
+                      break;
                       default:
                           request = nil
                   }
@@ -240,7 +261,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
               } else {
                   result(FlutterError(code: "InvalidArgument", message: "Invalid argument for 'sendRequest'", details: nil))
               }
-
+          break;
           default:
               result(FlutterMethodNotImplemented)
           }

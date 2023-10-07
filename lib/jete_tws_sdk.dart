@@ -23,6 +23,10 @@ class JeteTwsSdk {
       });
 
   void disconnect() => methodChannel.invokeMethod('disconnect');
+
+  void gotoBluetoothSettingIOS() =>
+      methodChannel.invokeMethod('gotoBluetoothSettingIOS');
+
   void startScan() => methodChannel.invokeMethod('startScan');
   void stopScan() => methodChannel.invokeMethod('stopScan');
 
