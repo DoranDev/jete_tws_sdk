@@ -69,7 +69,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         var item: [String: Any] = [:]
         item["deviceName"] = device.name
         item["deviceMacAddress"] = device.btAddress
-        item["deviceBleAddress"] = device.peripheral.identifier.uuidString
+        item["deviceIdentifier"] = device.peripheral.identifier.uuidString
         item["rssi"] = value.rssi
         return item
     }
@@ -312,8 +312,11 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         }
 
         for abDevice in devices {
-            print("deviceFromFlutter: \(abDevice.peripheral.identifier)")
-            if abDevice.peripheral.identifier.uuidString == device["deviceBleAddress"] as? String {
+            let earbud = abDevice as! ABEarbuds
+         
+            
+            if earbud.btAddress == device["deviceMacAddress"] as? String {
+                print("deviceFromFlutter: \(earbud.btAddress)")
                 return abDevice
             }
         }
