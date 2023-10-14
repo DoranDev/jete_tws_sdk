@@ -223,6 +223,7 @@ public class DeviceRepository implements ABEarbuds.ConnectionStateCallback, ABEa
 //        }
 //        return mBondedDevices != null && mBondedDevices.stream().anyMatch(device -> device.getAddress().equals(deviceAddress));
         if (mBondedDevices == null) {
+            updateBondedDevices();
             return false;
         }
 
