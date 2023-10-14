@@ -21,9 +21,9 @@ class DevicePower {
 
   factory DevicePower.fromJson(Map<String, dynamic> json) {
     return DevicePower(
-      leftSidePower: DeviceComponentPower.fromJson(json['leftSidePower']),
-      rightSidePower: DeviceComponentPower.fromJson(json['rightSidePower']),
-      casePower: DeviceComponentPower.fromJson(json['casePower']),
+      leftSidePower: DeviceComponentPower.fromJson(Map<String, dynamic>.from(json['leftSidePower'])),
+      rightSidePower: DeviceComponentPower.fromJson(Map<String, dynamic>.from(json['rightSidePower'])),
+      casePower: DeviceComponentPower.fromJson(Map<String, dynamic>.from(json['casePower'])),
     );
   }
 }
