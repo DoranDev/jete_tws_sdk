@@ -62,6 +62,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     private var mDevices = [Dictionary<String, Any>]()
     private var mABDevices = [ABDevice]()
     private let disposeBag = DisposeBag()
+    private var connectedDevice: ABEarbuds?
     
     
     private func deviceMap(_ value: ABDevice) -> [String: Any] {
@@ -81,7 +82,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
                 let item = self?.deviceMap(value)
 
                 if let existingIndex = self?.mDevices.firstIndex(where: { ($0 as [String: Any])["deviceMacAddress"] as? String == item?["deviceMacAddress"] as? String }) {
-                    self?.mDevices[existingIndex] = item!
+                   // self?.mDevices[existingIndex] = item!
                 } else {
                     self?.mABDevices.append(value)
                     self?.mDevices.append(item ?? [:])
@@ -290,6 +291,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             if let abDevice = abDevice {
                 return abDevice.isConnected
             }
+            print("not connected \(abDevice)" )
         }
         return false
     }
@@ -300,12 +302,29 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             let abDevice = deviceFromFlutter(device: dictionary, devices: mABDevices)
             if let abDevice = abDevice {
                 print("connect", device)
-                mDeviceRepository.connect(abDevice)
+                if(connectedDevice != nil){
+                    if(connectedDevice?.btAddress == dictionary["deviceMacAddress"] as? String){
+                        if let connectedDev = connectedDevice {
+                            mDeviceRepository.connect(connectedDev)
+                        }
+                    
+                        print("connected device")
+                    }else{
+                        mDeviceRepository.connect(abDevice)
+                        connectedDevice = abDevice
+                        print("ab device")
+                    }
+                }else{
+                  mDeviceRepository.connect(abDevice)
+                  connectedDevice = abDevice
+                    print("ab device when conn device null")
+                }
+                
             }
         }
     }
 
-    private func deviceFromFlutter(device: [String: Any?], devices: [ABDevice]) -> ABDevice? {
+    private func deviceFromFlutter(device: [String: Any?], devices: [ABDevice]) -> ABEarbuds? {
         if devices.isEmpty {
             print("deviceFromFlutter: devices list is empty")
             return nil
@@ -317,7 +336,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
             
             if earbud.btAddress == device["deviceMacAddress"] as? String {
                 print("deviceFromFlutter: \(earbud.btAddress)")
-                return abDevice
+                return earbud
             }
         }
 
@@ -328,9 +347,9 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         print("sendRequest", "deviceInfo")
         mDeviceRepository.deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest)
 
-        // Sleep for 500 milliseconds (0.5 seconds)
-        Thread.sleep(forTimeInterval: 0.5)
-
+        // Sleep for 1500 milliseconds (1.5 seconds)
+        Thread.sleep(forTimeInterval: 2)
+        print("sendRequest", "2")
         getLiveData()
     }
 

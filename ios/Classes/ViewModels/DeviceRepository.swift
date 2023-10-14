@@ -87,7 +87,7 @@ class DeviceRepository: NSObject {
     func startScanning() {
         guard !isScanning else { return }
         
-        resetPeripherals()
+       // resetPeripherals()
         isScanning = true
         bluetoothManager.startScanning()
     }
@@ -118,6 +118,7 @@ class DeviceRepository: NSObject {
         guard let device = workingDevice else {
             return
         }
+        print("disconnect")
         _activeDevice?.stop()
         bluetoothManager.disconnect(device.peripheral)
         isOpened = false
@@ -191,10 +192,10 @@ extension DeviceRepository: BluetoothDelegate {
         if state == .poweredOn {
             // TODO: move to another place
             // Listen bluetooth connection events
-//            if #available(iOS 13.0, *) {
-//                let ABMateServiceUUID = CBUUID(string: "FDB3")
-//                self.bluetoothManager.registerForConnectionEvents(options: [.serviceUUIDs: ABMateServiceUUID]) // TODO: options未定，预留
-//            }
+            if #available(iOS 13.0, *) {
+                let ABMateServiceUUID = CBUUID(string: "FDB3")
+                self.bluetoothManager.registerForConnectionEvents(options: [.serviceUUIDs: ABMateServiceUUID]) // TODO: options未定，预留
+            }
             
             if isOpened {
                 connect(workingDevice!)
@@ -315,22 +316,24 @@ extension DeviceRepository: ConnectionStateCallback {
     }
 
     func onReceiveAuthResult(device: ABDevice, passed: Bool) {
-//        if passed {
-//            _activeDevice = device
-//
-//            // Require all device info
-//            deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest) { request, result, timeout in
-//                guard #available(iOS 13.2, *), device.supportCTKD else { return }
-//                guard let result = result as? Bool, result else { return }
-//
-//                device.triggerCTKD()
-//            }
-//        } else {
-//            device.stop()
-//            bluetoothManager.disconnect(device.peripheral)
-//        }
+        if passed {
+            print("passed")
+            _activeDevice = device
+
+            // Require all device info
+            deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest) { request, result, timeout in
+                guard #available(iOS 13.2, *), device.supportCTKD else { return }
+                guard let result = result as? Bool, result else { return }
+
+                device.triggerCTKD()
+            }
+        } else {
+            print("not passed")
+            device.stop()
+            bluetoothManager.disconnect(device.peripheral)
+        }
 //        // 已经不处于认证状态
-//        preparingDevice = nil
+        preparingDevice = nil
     }
     
 }
