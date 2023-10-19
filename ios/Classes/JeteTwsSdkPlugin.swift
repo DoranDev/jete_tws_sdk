@@ -41,7 +41,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     // private var mActivity: UIViewController?
     // private var mDefaultDeviceCommManager: DefaultDeviceCommManager?
     // private var mDeviceManagerApi: DeviceManagerApi?
-    private var mDeviceRepository: DeviceRepository = DeviceRepository.shared
+    private var mDeviceRepository = ScannerViewModel.shared
     
     static let eventChannelNameScannerResult = "scannerResult";
     static let eventChannelNameScannerState = "scannerState";
@@ -77,7 +77,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
 
 
     private func initDevice() {
-        mDeviceRepository.latestDiscoveredDevice.subscribeOnNext { [weak self] device in
+        mDeviceRepository.latestDiscoveredPeripheral.subscribeOnNext { [weak self] device in
             if let value = device {
                 let item = self?.deviceMap(value)
 
@@ -270,7 +270,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     private func startScan() {
         print("startScan")
-        mDevices.removeAll()
+       // mDevices.removeAll()
         mDeviceRepository.startScanning()
     }
 
@@ -348,7 +348,7 @@ public class JeteTwsSdkPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
         mDeviceRepository.deviceCommManager.sendRequest(DeviceInfoRequest.defaultInfoRequest)
 
         // Sleep for 1500 milliseconds (1.5 seconds)
-        Thread.sleep(forTimeInterval: 2)
+        Thread.sleep(forTimeInterval: 1.5)
         print("sendRequest", "2")
         getLiveData()
     }

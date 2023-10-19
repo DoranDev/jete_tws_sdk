@@ -1,3 +1,7 @@
+## 1.0.10
+
+* ios device is connected
+
 ## 1.0.9
 
 * ios device is connected
