@@ -19,7 +19,6 @@ A new Flutter project.
   s.vendored_frameworks='FR/DequeModule.xcframework',
     'FR/RxRelay.xcframework',
     'FR/RxSwift.xcframework',
-    'FR/SnapKit.xcframework',
     'FR/Toaster.xcframework'
   s.platform = :ios, '11.0'
 
