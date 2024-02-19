@@ -472,7 +472,7 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
-
+    mDeviceRepository.unregisterBroadcastReceivers()
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
@@ -480,7 +480,8 @@ class JeteTwsSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   override fun onDetachedFromActivity() {
-
+    // Unregister the BroadcastReceiver here to prevent memory leaks
+    mDeviceRepository.unregisterBroadcastReceivers()
   }
 
   private fun deviceFromFlutter(device: HashMap<String, Any?>, devices : List<ABDevice>):ABDevice? {
